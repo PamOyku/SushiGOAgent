@@ -38,10 +38,10 @@ class BasicTreeNode {
     private AbstractGameState state;
 
     //Dictionary that binds RAVEValue to each GameState
-    private Map<AbstractGameState, Double> RAVEValue = new HashMap<>();
+    private Map<AbstractAction, Double> RAVEValue = new HashMap<>();
 
     //Dictionary that binds RAVECount to each GameState
-    private Map<AbstractGameState,Double> RAVECount  = new HashMap<>();
+    private Map<AbstractAction,Double> RAVECount  = new HashMap<>();
 
     private List<AbstractAction> currentROActions = new ArrayList<>();
     
@@ -210,8 +210,8 @@ class BasicTreeNode {
             double childValue = hvVal / (child.nVisits + params.epsilon);
 
             //Get RAVE value and count
-            double raveValue = RAVEValue.getOrDefault(state,0.0);
-            double raveCount = RAVECount.getOrDefault(state,0.0);
+            double raveValue = RAVEValue.getOrDefault(action,0.0);
+            double raveCount = RAVECount.getOrDefault(action,0.0);
 
             //Combines both original value and RAVE value
             double combinedValue =(1 -alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
@@ -299,12 +299,11 @@ class BasicTreeNode {
             n.nVisits++;
             n.totValue += result;
 
-            if(!RAVECount.containsKey(n.state)) {
-                RAVECount.put(n.state, 0.0);
-                RAVEValue.put(n.state, 0.0);
+            for (AbstractAction action : n.currentROActions) {
+                // Use action as the key instead of state
+                RAVECount.put(action, RAVECount.getOrDefault(action, 0.0) + 1);
+                RAVEValue.put(action, RAVEValueCalc(action, result));
             }
-            RAVECount.put(n.state, RAVECount.get(n.state)+ 1);
-            RAVEValue.put(n.state, RAVEValueCalc(n.state,result));
 
 
             n = n.parent;
@@ -345,9 +344,9 @@ class BasicTreeNode {
         return bestAction;
     }
 
-    private double RAVEValueCalc(AbstractGameState state, double result){
-        double raveValue = RAVEValue.getOrDefault(state,0.0);
-        double raveCount = RAVECount.getOrDefault(state,0.0);
+    private double RAVEValueCalc(AbstractAction action, double result){
+        double raveValue = RAVEValue.getOrDefault(action,0.0);
+        double raveCount = RAVECount.getOrDefault(action,0.0);
         double NewRAVEValue = (raveValue * raveCount + result) / (raveCount + 1);
         return NewRAVEValue;
     }
