@@ -270,6 +270,9 @@ class BasicTreeNode {
         return value;
     }
 
+
+
+
     /**
      * Checks if rollout is finished. Rollouts end on maximum length, or if game ended.
      *
@@ -345,7 +348,7 @@ class BasicTreeNode {
     private double RAVEValueCalc(AbstractGameState state, double result){
         double raveValue = RAVEValue.getOrDefault(state,0.0);
         double raveCount = RAVECount.getOrDefault(state,0.0);
-        double NewRAVEValue = Math.max(0,(raveValue * raveCount) + result/(raveCount + 1));
+        double NewRAVEValue = (raveValue * raveCount + result) / (raveCount + 1);
         return NewRAVEValue;
     }
 

@@ -12,6 +12,7 @@ import games.GameType;
 import gui.AbstractGUIManager;
 import gui.GUI;
 import gui.GamePanel;
+import players.MCRave.MCRavePlayer;
 import players.basicMCTS.BasicMCTSPlayer;
 import players.human.ActionController;
 import players.human.HumanConsolePlayer;
@@ -837,7 +838,7 @@ public class Game {
 
         /* Set up players for the game */
         ArrayList<AbstractPlayer> players = new ArrayList<>();
-        players.add(new HumanGUIPlayer(ac));
+        players.add(new MCRavePlayer());
         players.add(new RandomPlayer());
         players.add(new BasicMCTSPlayer());
         players.add(new OSLAPlayer());

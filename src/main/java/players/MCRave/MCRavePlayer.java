@@ -28,10 +28,7 @@ public class MCRavePlayer extends AbstractPlayer {
 
         // These parameters can be changed, and will impact the Basic MCTS algorithm
         MCRaveParams params = getParameters();
-        params.K = Math.sqrt(2);
-        params.rolloutLength = 10;
-        params.maxTreeDepth = 5;
-        params.epsilon = 1e-6;
+
 
     }
 

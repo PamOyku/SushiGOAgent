@@ -1,0 +1,135 @@
+Game: SushiGo, Players: 4, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 4
+BasicMCTS got 9.00 points. BasicMCTS won 9.4% of the 96 games of the tournament. BasicMCTS won 9.4% of the 96 games it played during the tournament.
+BasicMCTS won 9.4% of the 96 games against MCRave.
+BasicMCTS won 9.4% of the 96 games against mcts.
+BasicMCTS won 9.4% of the 96 games against Random.
+
+MCRave got 2.00 points. MCRave won 2.1% of the 96 games of the tournament. MCRave won 2.1% of the 96 games it played during the tournament.
+MCRave won 2.1% of the 96 games against BasicMCTS.
+MCRave won 2.1% of the 96 games against mcts.
+MCRave won 2.1% of the 96 games against Random.
+
+mcts got 84.00 points. mcts won 87.5% of the 96 games of the tournament. mcts won 87.5% of the 96 games it played during the tournament.
+mcts won 87.5% of the 96 games against BasicMCTS.
+mcts won 87.5% of the 96 games against MCRave.
+mcts won 87.5% of the 96 games against Random.
+
+Random got 1.00 points. Random won 1.0% of the 96 games of the tournament. Random won 1.0% of the 96 games it played during the tournament.
+Random won 1.0% of the 96 games against BasicMCTS.
+Random won 1.0% of the 96 games against MCRave.
+Random won 1.0% of the 96 games against mcts.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+mcts: Win rate 0.88 +/- 0.034	Mean Ordinal 1.13 +/- 0.03
+BasicMCTS: Win rate 0.09 +/- 0.030	Mean Ordinal 2.43 +/- 0.09
+MCRave: Win rate 0.02 +/- 0.015	Mean Ordinal 2.90 +/- 0.08
+Random: Win rate 0.01 +/- 0.010	Mean Ordinal 3.53 +/- 0.07
+
+Game: SushiGo, Players: 4, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 4
+BasicMCTS got 3.50 points. BasicMCTS won 3.1% of the 96 games of the tournament. BasicMCTS won 3.1% of the 96 games it played during the tournament.
+BasicMCTS won 3.1% of the 96 games against MCRave.
+BasicMCTS won 3.1% of the 96 games against mcts.
+BasicMCTS won 3.1% of the 96 games against Random.
+
+MCRave got 4.00 points. MCRave won 4.2% of the 96 games of the tournament. MCRave won 4.2% of the 96 games it played during the tournament.
+MCRave won 4.2% of the 96 games against BasicMCTS.
+MCRave won 4.2% of the 96 games against mcts.
+MCRave won 4.2% of the 96 games against Random.
+
+mcts got 87.00 points. mcts won 89.6% of the 96 games of the tournament. mcts won 89.6% of the 96 games it played during the tournament.
+mcts won 89.6% of the 96 games against BasicMCTS.
+mcts won 89.6% of the 96 games against MCRave.
+mcts won 89.6% of the 96 games against Random.
+
+Random got 1.50 points. Random won 1.0% of the 96 games of the tournament. Random won 1.0% of the 96 games it played during the tournament.
+Random won 1.0% of the 96 games against BasicMCTS.
+Random won 1.0% of the 96 games against MCRave.
+Random won 1.0% of the 96 games against mcts.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+mcts: Win rate 0.91 +/- 0.029	Mean Ordinal 1.10 +/- 0.04
+MCRave: Win rate 0.04 +/- 0.020	Mean Ordinal 2.78 +/- 0.08
+BasicMCTS: Win rate 0.04 +/- 0.018	Mean Ordinal 2.69 +/- 0.09
+Random: Win rate 0.02 +/- 0.012	Mean Ordinal 3.40 +/- 0.08
+
+Game: SushiGo, Players: 4, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 4
+BasicMCTS got 8.00 points. BasicMCTS won 8.3% of the 96 games of the tournament. BasicMCTS won 8.3% of the 96 games it played during the tournament.
+BasicMCTS won 8.3% of the 96 games against MCRave.
+BasicMCTS won 8.3% of the 96 games against mcts.
+BasicMCTS won 8.3% of the 96 games against Random.
+
+MCRave got 1.00 points. MCRave won 1.0% of the 96 games of the tournament. MCRave won 1.0% of the 96 games it played during the tournament.
+MCRave won 1.0% of the 96 games against BasicMCTS.
+MCRave won 1.0% of the 96 games against mcts.
+MCRave won 1.0% of the 96 games against Random.
+
+mcts got 86.00 points. mcts won 89.6% of the 96 games of the tournament. mcts won 89.6% of the 96 games it played during the tournament.
+mcts won 89.6% of the 96 games against BasicMCTS.
+mcts won 89.6% of the 96 games against MCRave.
+mcts won 89.6% of the 96 games against Random.
+
+Random got 1.00 points. Random won 1.0% of the 96 games of the tournament. Random won 1.0% of the 96 games it played during the tournament.
+Random won 1.0% of the 96 games against BasicMCTS.
+Random won 1.0% of the 96 games against MCRave.
+Random won 1.0% of the 96 games against mcts.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+mcts: Win rate 0.90 +/- 0.031	Mean Ordinal 1.11 +/- 0.04
+BasicMCTS: Win rate 0.08 +/- 0.028	Mean Ordinal 2.52 +/- 0.08
+MCRave: Win rate 0.01 +/- 0.010	Mean Ordinal 2.89 +/- 0.08
+Random: Win rate 0.01 +/- 0.010	Mean Ordinal 3.46 +/- 0.08
+
+Game: SushiGo, Players: 4, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 4
+BasicMCTS got 6.00 points. BasicMCTS won 6.3% of the 96 games of the tournament. BasicMCTS won 6.3% of the 96 games it played during the tournament.
+BasicMCTS won 6.3% of the 96 games against MCRave.
+BasicMCTS won 6.3% of the 96 games against mcts.
+BasicMCTS won 6.3% of the 96 games against Random.
+
+MCRave got 4.50 points. MCRave won 4.2% of the 96 games of the tournament. MCRave won 4.2% of the 96 games it played during the tournament.
+MCRave won 4.2% of the 96 games against BasicMCTS.
+MCRave won 4.2% of the 96 games against mcts.
+MCRave won 4.2% of the 96 games against Random.
+
+mcts got 82.50 points. mcts won 85.4% of the 96 games of the tournament. mcts won 85.4% of the 96 games it played during the tournament.
+mcts won 85.4% of the 96 games against BasicMCTS.
+mcts won 85.4% of the 96 games against MCRave.
+mcts won 85.4% of the 96 games against Random.
+
+Random got 3.00 points. Random won 3.1% of the 96 games of the tournament. Random won 3.1% of the 96 games it played during the tournament.
+Random won 3.1% of the 96 games against BasicMCTS.
+Random won 3.1% of the 96 games against MCRave.
+Random won 3.1% of the 96 games against mcts.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+mcts: Win rate 0.86 +/- 0.035	Mean Ordinal 1.17 +/- 0.05
+BasicMCTS: Win rate 0.06 +/- 0.025	Mean Ordinal 2.61 +/- 0.08
+MCRave: Win rate 0.05 +/- 0.021	Mean Ordinal 2.75 +/- 0.09
+Random: Win rate 0.03 +/- 0.018	Mean Ordinal 3.44 +/- 0.08
+
+Game: SushiGo, Players: 4, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 4
+BasicMCTS got 7.00 points. BasicMCTS won 7.3% of the 96 games of the tournament. BasicMCTS won 7.3% of the 96 games it played during the tournament.
+BasicMCTS won 7.3% of the 96 games against MCRave.
+BasicMCTS won 7.3% of the 96 games against mcts.
+BasicMCTS won 7.3% of the 96 games against Random.
+
+MCRave got 4.00 points. MCRave won 4.2% of the 96 games of the tournament. MCRave won 4.2% of the 96 games it played during the tournament.
+MCRave won 4.2% of the 96 games against BasicMCTS.
+MCRave won 4.2% of the 96 games against mcts.
+MCRave won 4.2% of the 96 games against Random.
+
+mcts got 85.00 points. mcts won 88.5% of the 96 games of the tournament. mcts won 88.5% of the 96 games it played during the tournament.
+mcts won 88.5% of the 96 games against BasicMCTS.
+mcts won 88.5% of the 96 games against MCRave.
+mcts won 88.5% of the 96 games against Random.
+
+Random got 0.00 points. Random won 0.0% of the 96 games of the tournament. Random won 0.0% of the 96 games it played during the tournament.
+Random won 0.0% of the 96 games against BasicMCTS.
+Random won 0.0% of the 96 games against MCRave.
+Random won 0.0% of the 96 games against mcts.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+mcts: Win rate 0.89 +/- 0.033	Mean Ordinal 1.13 +/- 0.04
+BasicMCTS: Win rate 0.07 +/- 0.027	Mean Ordinal 2.68 +/- 0.09
+MCRave: Win rate 0.04 +/- 0.020	Mean Ordinal 2.67 +/- 0.08
+Random: Win rate 0.00 +/- 0.000	Mean Ordinal 3.49 +/- 0.07
+

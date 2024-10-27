@@ -10,9 +10,9 @@ import java.util.Arrays;
 public class MCRaveParams extends PlayerParameters {
 
     public double K = Math.sqrt(2); // UCBI Exploration constant
-    public int rolloutLength = 10; // assuming we have a good heuristic (Max length fo the rollouts)
+    public int rolloutLength = 10; // assuming we have a good heuristic (Max length of the rollouts)
     public int maxTreeDepth = 100; // effectively no limit (Max length the tree can grow)
-    public double raveWeight = 0.5;
+    public double raveWeight = 0.9;
     public double epsilon = 1e-6;
     public IStateHeuristic heuristic = AbstractGameState::getHeuristicScore;
 
@@ -22,7 +22,7 @@ public class MCRaveParams extends PlayerParameters {
         addTunableParameter("maxTreeDepth", 100, Arrays.asList(1, 3, 10, 30, 100));
         addTunableParameter("epsilon", 1e-6);
         addTunableParameter("heuristic", (IStateHeuristic) AbstractGameState::getHeuristicScore);
-        addTunableParameter("raveWeight",0.5,Arrays.asList(0.0,0.1,0.5,1.0));
+        addTunableParameter("raveWeight",0.5,Arrays.asList(0.0,0.1,0.3,0.5,1.0));
     }
 
     @Override
