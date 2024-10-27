@@ -2,14 +2,12 @@ package players.MCRave;
 
 import core.AbstractGameState;
 import core.actions.AbstractAction;
+import org.apache.spark.sql.execution.columnar.FLOAT;
 import players.PlayerConstants;
 import players.simple.RandomPlayer;
 import utilities.ElapsedCpuTimer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static players.PlayerConstants.*;
@@ -38,6 +36,12 @@ class BasicTreeNode {
 
     // State in this node (closed loop)
     private AbstractGameState state;
+
+    //Dictionary that binds RAVEValue to each GameState
+    private Dictionary<AbstractGameState, Float> RAVEValue;
+
+    //Dictionary that binds RAVECount to each GameState
+    private Dictionary<AbstractGameState,Float> RAVECount;
     
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -52,6 +56,13 @@ class BasicTreeNode {
             depth = 0;
         }
         this.rnd = rnd;
+        if(RAVECount.get(state) != null){
+            Float oldValue = RAVECount.get(state);
+            RAVECount.put(state, oldValue + 1);
+        }else{
+            RAVECount.put(state,0.0f);
+            RAVEValue.put(state,0.0f);
+        }
         randomPlayer.setForwardModel(player.getForwardModel());
     }
 
@@ -280,6 +291,8 @@ class BasicTreeNode {
             n.nVisits++;
             n.totValue += result;
             n = n.parent;
+            RAVEValue.put(n.state, RAVEValueCalc(n.state,result));
+            RAVECount.put(n.state, RAVECount.get(n.state)+ 1);
         }
     }
 
@@ -314,6 +327,13 @@ class BasicTreeNode {
         }
 
         return bestAction;
+    }
+
+    private float RAVEValueCalc(AbstractGameState state, double result){
+        float raveValue = RAVEValue.get(state);
+        float raveCount = RAVECount.get(state);
+        float NewRAVEValue = Math.max(0,(raveValue * raveCount) + (float)(result)/(raveCount + 1));
+        return NewRAVEValue;
     }
 
 }
