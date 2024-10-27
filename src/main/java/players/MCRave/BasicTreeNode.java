@@ -38,10 +38,12 @@ class BasicTreeNode {
     private AbstractGameState state;
 
     //Dictionary that binds RAVEValue to each GameState
-    private Dictionary<AbstractGameState, Float> RAVEValue;
+    private Map<AbstractGameState, Double> RAVEValue = new HashMap<>();
 
     //Dictionary that binds RAVECount to each GameState
-    private Dictionary<AbstractGameState,Float> RAVECount;
+    private Map<AbstractGameState,Double> RAVECount  = new HashMap<>();
+
+    private List<AbstractAction> currentROActions = new ArrayList<>();
     
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -56,13 +58,6 @@ class BasicTreeNode {
             depth = 0;
         }
         this.rnd = rnd;
-        if(RAVECount.get(state) != null){
-            Float oldValue = RAVECount.get(state);
-            RAVECount.put(state, oldValue + 1);
-        }else{
-            RAVECount.put(state,0.0f);
-            RAVEValue.put(state,0.0f);
-        }
         randomPlayer.setForwardModel(player.getForwardModel());
     }
 
@@ -201,6 +196,7 @@ class BasicTreeNode {
         AbstractAction bestAction = null;
         double bestValue = -Double.MAX_VALUE;
         MCRaveParams params = player.getParameters();
+        double alpha = params.raveWeight;
 
         for (AbstractAction action : children.keySet()) {
             BasicTreeNode child = children.get(action);
@@ -213,6 +209,13 @@ class BasicTreeNode {
             double hvVal = child.totValue;
             double childValue = hvVal / (child.nVisits + params.epsilon);
 
+            //Get RAVE value and count
+            double raveValue = RAVEValue.getOrDefault(state,0.0);
+            double raveCount = RAVECount.getOrDefault(state,0.0);
+
+            //Combines both original value and RAVE value
+            double combinedValue =(1 -alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
+
             // default to standard UCB
             double explorationTerm = params.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + params.epsilon));
             // unless we are using a variant
@@ -221,7 +224,7 @@ class BasicTreeNode {
             // If 'we' are taking a turn we use classic UCB
             // If it is an opponent's turn, then we assume they are trying to minimise our score (with exploration)
             boolean iAmMoving = state.getCurrentPlayer() == player.getPlayerID();
-            double uctValue = iAmMoving ? childValue : -childValue;
+            double uctValue = iAmMoving ? combinedValue : -combinedValue;
             uctValue += explorationTerm;
 
             // Apply small noise to break ties randomly
@@ -247,6 +250,7 @@ class BasicTreeNode {
      * @return - value of rollout.
      */
     private double rollOut() {
+        currentROActions.clear();
         int rolloutDepth = 0; // counting from end of tree
 
         // If rollouts are enabled, select actions for the rollout in line with the rollout policy
@@ -254,6 +258,7 @@ class BasicTreeNode {
         if (player.getParameters().rolloutLength > 0) {
             while (!finishRollout(rolloutState, rolloutDepth)) {
                 AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
+                currentROActions.add(next);
                 advance(rolloutState, next);
                 rolloutDepth++;
             }
@@ -290,9 +295,17 @@ class BasicTreeNode {
         while (n != null) {
             n.nVisits++;
             n.totValue += result;
-            n = n.parent;
-            RAVEValue.put(n.state, RAVEValueCalc(n.state,result));
+
+            if(!RAVECount.containsKey(n.state)) {
+                RAVECount.put(n.state, 0.0);
+                RAVEValue.put(n.state, 0.0);
+            }
             RAVECount.put(n.state, RAVECount.get(n.state)+ 1);
+            RAVEValue.put(n.state, RAVEValueCalc(n.state,result));
+
+
+            n = n.parent;
+
         }
     }
 
@@ -329,10 +342,10 @@ class BasicTreeNode {
         return bestAction;
     }
 
-    private float RAVEValueCalc(AbstractGameState state, double result){
-        float raveValue = RAVEValue.get(state);
-        float raveCount = RAVECount.get(state);
-        float NewRAVEValue = Math.max(0,(raveValue * raveCount) + (float)(result)/(raveCount + 1));
+    private double RAVEValueCalc(AbstractGameState state, double result){
+        double raveValue = RAVEValue.getOrDefault(state,0.0);
+        double raveCount = RAVECount.getOrDefault(state,0.0);
+        double NewRAVEValue = Math.max(0,(raveValue * raveCount) + result/(raveCount + 1));
         return NewRAVEValue;
     }
 
