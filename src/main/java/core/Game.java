@@ -838,11 +838,11 @@ public class Game {
 
         /* Set up players for the game */
         ArrayList<AbstractPlayer> players = new ArrayList<>();
-        players.add(new MCRavePlayer());
+
         players.add(new RandomPlayer());
         players.add(new BasicMCTSPlayer());
         players.add(new OSLAPlayer());
-
+        players.add(new MCRavePlayer());
 //        RMHCParams params = new RMHCParams();
 //        params.horizon = 15;
 //        params.discountFactor = 0.99;

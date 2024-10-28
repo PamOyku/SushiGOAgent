@@ -1,6 +1,6 @@
 {
   "game" : "SushiGo",
-  "nPlayers" : 2,
+  "nPlayers" : 3,
   "mode" : "exhaustive",
   "matchups" : 100,
   "verbose" : false,

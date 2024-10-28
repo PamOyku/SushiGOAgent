@@ -5,6 +5,7 @@ import core.actions.AbstractAction;
 import org.apache.spark.sql.execution.columnar.FLOAT;
 import players.PlayerConstants;
 import players.simple.RandomPlayer;
+import scala.Console;
 import utilities.ElapsedCpuTimer;
 
 import java.util.*;
@@ -41,10 +42,12 @@ class BasicTreeNode {
     private Map<AbstractAction, Double> RAVEValue = new HashMap<>();
 
     //Dictionary that binds RAVECount to each GameState
-    private Map<AbstractAction,Double> RAVECount  = new HashMap<>();
+    private Map<AbstractAction, Double> RAVECount = new HashMap<>();
 
     private List<AbstractAction> currentROActions = new ArrayList<>();
-    
+
+    private int delayThreshold = 100;
+
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
         this.fmCallsCount = 0;
@@ -210,11 +213,11 @@ class BasicTreeNode {
             double childValue = hvVal / (child.nVisits + params.epsilon);
 
             //Get RAVE value and count
-            double raveValue = RAVEValue.getOrDefault(action,0.0);
-            double raveCount = RAVECount.getOrDefault(action,0.0);
+            double raveValue = RAVEValue.getOrDefault(action, 0.0);
+            double raveCount = RAVECount.getOrDefault(action, 0.0);
 
             //Combines both original value and RAVE value
-            double combinedValue =(1 -alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
+            double combinedValue = (1 - alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
 
             // default to standard UCB
             double explorationTerm = params.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + params.epsilon));
@@ -228,7 +231,7 @@ class BasicTreeNode {
             uctValue += explorationTerm;
 
             // Apply small noise to break ties randomly
-            uctValue = noise(uctValue,params.epsilon, player.getRnd().nextDouble());
+            uctValue = noise(uctValue, params.epsilon, player.getRnd().nextDouble());
 
             // Assign value
             if (uctValue > bestValue) {
@@ -251,54 +254,77 @@ class BasicTreeNode {
      */
     private double rollOut() {
         currentROActions.clear();
-        int rolloutDepth = 0; // counting from end of tree
+        int rolloutDepth = 0; // Counting from the end of the tree
 
-        // If rollouts are enabled, select actions for the rollout in line with the rollout policy
+        // Copy the current state for rollout
         AbstractGameState rolloutState = state.copy();
         if (player.getParameters().rolloutLength > 0) {
             while (!finishRollout(rolloutState, rolloutDepth)) {
-              List<AbstractAction> availableActions = player.getForwardModel().computeAvailableActions(state,player.getParameters().actionSpace);
-              Map<AbstractAction,Double> actionProbablilty = new HashMap<>();
-                double totalBias = 0.0;
-                for (AbstractAction action: availableActions) {
-                    double raveValue = RAVEValue.getOrDefault(action ,0.0);
-                    double raveCount = RAVECount.getOrDefault(action, 1.0);
-                    double bias = raveValue/(raveCount+1);
-                    actionProbablilty.put(action,bias);
-                    totalBias += bias;
+                if (rolloutDepth < delayThreshold) {
+                    // Perform actions normally without biased rollout
+                    AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
+                    advance(rolloutState, next);
+                    //Console.print(next);
+                } else {
+                    // Perform biased rollout after the delay threshold is reached
+                    AbstractAction next = biasedRollout(rolloutState);
+                    currentROActions.add(next);
+                    advance(rolloutState, next);
                 }
-                for(AbstractAction action: actionProbablilty.keySet()){
-                    actionProbablilty.put(action,(actionProbablilty.get(action)/totalBias));
-                }
-
-                double actionBound = Math.random();
-                double currentProb = 0.0;
-                for(AbstractAction action: actionProbablilty.keySet()){
-                    currentProb += actionProbablilty.get(action);
-                    if(currentProb>= actionBound){
-                        currentROActions.add(action);
-                        advance(rolloutState, action);
-                        rolloutDepth++;
-                        break;
-                    }
-                }
-                /*
-                AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
-                currentROActions.add(next);
-                advance(rolloutState, next); */
-
-
+                rolloutDepth++;
             }
         }
-        // Evaluate final state and return normalised score
+
+        // Evaluate final state and return normalized score
         double value = player.getParameters().getHeuristic().evaluateState(rolloutState, player.getPlayerID());
-        if (Double.isNaN(value))
+        if (Double.isNaN(value)) {
             throw new AssertionError("Illegal heuristic value - should be a number");
+        }
         return value;
     }
 
+    private AbstractAction performNormalAction(AbstractGameState rolloutState) {
+        // Implement your logic for normal action selection here
+        List<AbstractAction> availableActions = player.getForwardModel().computeAvailableActions(rolloutState, player.getParameters().actionSpace);
+        // For simplicity, just randomly select an action from the available actions
+        return availableActions.get((int) (Math.random() * availableActions.size()));
+    }
 
+    private AbstractAction biasedRollout(AbstractGameState rolloutState) {
+        List<AbstractAction> availableActions = player.getForwardModel().computeAvailableActions(rolloutState, player.getParameters().actionSpace);
+        Map<AbstractAction, Double> actionProbability = new HashMap<>();
+        double totalBias = 0.0;
 
+        // Calculate biases based on RAVE values
+        for (AbstractAction action : availableActions) {
+            double raveValue = RAVEValue.getOrDefault(action, 0.0);
+            double raveCount = RAVECount.getOrDefault(action, 1.0);
+            double bias = raveValue / (raveCount + player.getParameters().epsilon);
+            actionProbability.put(action, bias);
+            totalBias += bias;
+        }
+
+        // Normalize probabilities
+        for (AbstractAction action : actionProbability.keySet()) {
+            actionProbability.put(action, actionProbability.get(action) / totalBias);
+        }
+
+        // Select an action based on the calculated probabilities
+        return weightedRandomSelect(availableActions, new ArrayList<>(actionProbability.values()));
+    }
+
+    private AbstractAction weightedRandomSelect(List<AbstractAction> actions, List<Double> probabilities) {
+        double r = Math.random();
+        double cumulativeProbability = 0.0;
+
+        for (int i = 0; i < actions.size(); i++) {
+            cumulativeProbability += probabilities.get(i);
+            if (r <= cumulativeProbability) {
+                return actions.get(i);
+            }
+        }
+        return actions.get(actions.size() - 1); // Fallback to the last action
+    }
 
     /**
      * Checks if rollout is finished. Rollouts end on maximum length, or if game ended.
@@ -326,15 +352,18 @@ class BasicTreeNode {
             n.nVisits++;
             n.totValue += result;
 
-            for (AbstractAction action : n.currentROActions) {
-                // Use action as the key instead of state
-                RAVECount.put(action, RAVECount.getOrDefault(action, 0.0) + 1);
-                RAVEValue.put(action, RAVEValueCalc(action, result));
+            // Check if the currentROActions list is not empty before proceeding
+            if (!n.currentROActions.isEmpty()) {
+                for (AbstractAction action : n.currentROActions) {
+                    RAVECount.put(action, RAVECount.getOrDefault(action, 0.0) + 1);
+                    RAVEValue.put(action, calculateRAVEValue(action, result));
+                }
+            } else {
+                // Log or handle the case when there are no actions
+                //System.err.println("Warning: No actions recorded for back up!");
             }
 
-
             n = n.parent;
-
         }
     }
 
@@ -371,11 +400,11 @@ class BasicTreeNode {
         return bestAction;
     }
 
-    private double RAVEValueCalc(AbstractAction action, double result){
-        double raveValue = RAVEValue.getOrDefault(action,0.0);
-        double raveCount = RAVECount.getOrDefault(action,0.0);
-        double NewRAVEValue = (raveValue * raveCount + result) / (raveCount + 1);
-        return NewRAVEValue;
+    private double calculateRAVEValue(AbstractAction action, double result) {
+        double currentRAVEValue = RAVEValue.getOrDefault(action, 0.0);
+        double currentRAVECount = RAVECount.getOrDefault(action, 0.0);
+        return (currentRAVEValue * currentRAVECount + result) / (currentRAVECount + 1);
     }
-
 }
+
+
