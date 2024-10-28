@@ -2,7 +2,7 @@
 	"class" : "players.mcts.MCTSParams",
 	"K" : 1.0,
 	"rolloutLength" : 100,
-	"maxTreeDepth" : 30,
+	"maxTreeDepth" : 100,
 	"treePolicy" : "UCB",
 	"opponentTreePolicy" : "OneTree",
 	"selectionPolicy" : "SIMPLE",
