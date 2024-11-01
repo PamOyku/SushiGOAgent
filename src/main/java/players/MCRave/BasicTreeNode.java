@@ -6,6 +6,7 @@ import org.apache.spark.sql.execution.columnar.FLOAT;
 import players.PlayerConstants;
 import players.simple.RandomPlayer;
 import scala.Console;
+import scala.collection.immutable.Stream;
 import utilities.ElapsedCpuTimer;
 
 import java.util.*;
@@ -46,7 +47,7 @@ class BasicTreeNode {
 
     private List<AbstractAction> currentROActions = new ArrayList<>();
 
-    private int delayThreshold = 100;
+    private int delayThreshold = 350;
 
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -93,11 +94,12 @@ class BasicTreeNode {
             // Selection + expansion: navigate tree until a node not fully expanded is found, add a new node to the tree
             BasicTreeNode selected = treePolicy(); // performs selection (using UCBI) and expansion
             // Monte carlo rollout: return value of MC rollout from the newly added node
-            double delta = selected.rollOut(); // performs the Monte Carlo simulation setup
+            double delta = selected.rollOut(numIters); // performs the Monte Carlo simulation setup
             // Back up the value of the rollout through the tree
             selected.backUp(delta); // performs the backpropagation step
             // Finished iteration
             numIters++;
+            Console.print("The current RAVE Size is: "+RAVECount.size()+"\n");
 
             // Check stopping condition
             PlayerConstants budgetType = params.budgetType;
@@ -252,7 +254,7 @@ class BasicTreeNode {
      *
      * @return - value of rollout.
      */
-    private double rollOut() {
+    private double rollOut(int numIters) {
         currentROActions.clear();
         int rolloutDepth = 0; // Counting from the end of the tree
 
@@ -260,19 +262,22 @@ class BasicTreeNode {
         AbstractGameState rolloutState = state.copy();
         if (player.getParameters().rolloutLength > 0) {
             while (!finishRollout(rolloutState, rolloutDepth)) {
-                if (rolloutDepth < delayThreshold) {
+                //Console.print("Current rollout depth:"+rolloutDepth+"\n");
+                if (numIters < delayThreshold) {
                     // Perform actions normally without biased rollout
                     AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
                     advance(rolloutState, next);
-                    //Console.print(next);
+                    Console.print("Random"+"\n");
                 } else {
                     // Perform biased rollout after the delay threshold is reached
                     AbstractAction next = biasedRollout(rolloutState);
                     currentROActions.add(next);
                     advance(rolloutState, next);
+                    Console.print("Bias"+"\n");
                 }
                 rolloutDepth++;
             }
+            //Console.print("Current number of iteration:"+numIters+"\n");
         }
 
         // Evaluate final state and return normalized score
@@ -281,13 +286,6 @@ class BasicTreeNode {
             throw new AssertionError("Illegal heuristic value - should be a number");
         }
         return value;
-    }
-
-    private AbstractAction performNormalAction(AbstractGameState rolloutState) {
-        // Implement your logic for normal action selection here
-        List<AbstractAction> availableActions = player.getForwardModel().computeAvailableActions(rolloutState, player.getParameters().actionSpace);
-        // For simplicity, just randomly select an action from the available actions
-        return availableActions.get((int) (Math.random() * availableActions.size()));
     }
 
     private AbstractAction biasedRollout(AbstractGameState rolloutState) {
