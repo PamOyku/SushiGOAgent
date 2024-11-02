@@ -7,6 +7,7 @@ import core.interfaces.IStateHeuristic;
 import games.sushigo.SGGameState;
 import games.sushigo.cards.SGCard;
 import java.util.Map;
+import core.components.Deck;
 
 public class ScoreHeuristic implements IStateHeuristic {
 
@@ -32,6 +33,7 @@ public class ScoreHeuristic implements IStateHeuristic {
         if (gs instanceof SGGameState sgState){
 
             heuristicValue += calculateHistoricalBonuses(sgState, playerId);
+            heuristicValue += evaluateHandContents(sgState, playerId);
         }
 
         return heuristicValue;
@@ -54,6 +56,32 @@ public class ScoreHeuristic implements IStateHeuristic {
         if (puddingPoints >= 5) bonus += 3;
 
         return bonus;
+    }
+
+    private double evaluateHandContents(SGGameState sgState, int playerId){
+        double handBonus = 0.0;
+
+        Deck<SGCard> playerHand = sgState.getPlayerHands().get(playerId);
+        int makiCount = 0;
+        int tempuraCount = 0;
+        int sashimiCount = 0;
+        int puddingCount = 0;
+
+
+        for (SGCard card : playerHand.getComponents()){
+            if ( card.type == SGCard.SGCardType.Maki) makiCount++;
+            if ( card.type == SGCard.SGCardType.Tempura) tempuraCount++;
+            if ( card.type == SGCard.SGCardType.Sashimi) sashimiCount++;
+            if ( card.type == SGCard.SGCardType.Pudding) puddingCount++;
+        }
+
+        if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
+        if (tempuraCount == 1) handBonus +=3;
+        if (sashimiCount == 2) handBonus +=6;
+
+
+
+        return handBonus;
     }
     @Override
     public double minValue() {
