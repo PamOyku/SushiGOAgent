@@ -142,18 +142,7 @@ public class SGGameState extends AbstractGameState {
 
         return copy;
     }
-    /**
-     *
-     * @param playerId - ID of the player
-     * @param cardType - type of card to count
-     * @return number of cards of the specific type that the player has played
-     */
 
-    public int getCardCount(int playerId, SGCard.SGCardType cardType){
-        Counter cardCounter = playedCardTypes[playerId].get(cardType);
-
-        return cardCounter != null ? cardCounter.getValue() : 0;
-    }
 
     /**
      * we do know the contents of the hands of players up to T to our left, where T is the number of player turns

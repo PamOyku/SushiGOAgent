@@ -67,19 +67,22 @@ public class ScoreHeuristic implements IStateHeuristic {
         int sashimiCount = 0;
         int puddingCount = 0;
 
+        for (int opponentId = 0; opponentId < sgState.getNPlayers(); opponentId++){
+            if (opponentId != playerId && sgState.hasSeenHand(playerId, opponentId)){
 
-        for (SGCard card : playerHand.getComponents()){
-            if ( card.type == SGCard.SGCardType.Maki) makiCount++;
-            if ( card.type == SGCard.SGCardType.Tempura) tempuraCount++;
-            if ( card.type == SGCard.SGCardType.Sashimi) sashimiCount++;
-            if ( card.type == SGCard.SGCardType.Pudding) puddingCount++;
+                Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
+                for (SGCard card : opponentHand.getComponents()){
+                    if ( card.type == SGCard.SGCardType.Maki) makiCount++;
+                    if ( card.type == SGCard.SGCardType.Tempura) tempuraCount++;
+                    if ( card.type == SGCard.SGCardType.Sashimi) sashimiCount++;
+                    if ( card.type == SGCard.SGCardType.Pudding) puddingCount++;
+                }
+            }
         }
 
         if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
         if (tempuraCount == 1) handBonus +=3;
         if (sashimiCount == 2) handBonus +=6;
-
-
 
         return handBonus;
     }
