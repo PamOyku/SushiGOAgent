@@ -3,6 +3,7 @@ package players.MCRave;
 import core.AbstractGameState;
 import core.interfaces.IStateHeuristic;
 import players.PlayerParameters;
+import players.heuristics.ScoreHeuristic;
 
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ public class MCRaveParams extends PlayerParameters {
         addTunableParameter("rolloutLength", 10, Arrays.asList(0, 3, 10, 30, 100));
         addTunableParameter("maxTreeDepth", 100, Arrays.asList(1, 3, 10, 30, 100));
         addTunableParameter("epsilon", 1e-6);
-        addTunableParameter("heuristic", (IStateHeuristic) AbstractGameState::getHeuristicScore);
+        addTunableParameter("heuristic", new ScoreHeuristic());
         addTunableParameter("raveWeight",0.5,Arrays.asList(0.0,0.1,0.3,0.5,1.0));
     }
 
