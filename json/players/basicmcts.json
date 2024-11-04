@@ -1,7 +1,7 @@
 {
 	"class" : "players.basicMCTS.BasicMCTSParams",
 	"K" : 1.0,
-	"rolloutLength" : 0,
+	"rolloutLength" : 10,
 	"maxTreeDepth" : 30,
 	"heuristic" : {
  		"class" : "players.heuristics.ScoreHeuristic"
