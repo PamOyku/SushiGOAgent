@@ -3,6 +3,8 @@ package players.MCRave;
 import core.AbstractGameState;
 import core.actions.AbstractAction;
 import org.apache.spark.sql.execution.columnar.FLOAT;
+import players.MCRave.MCRaveParams;
+import players.MCRave.MCRavePlayer;
 import players.PlayerConstants;
 import players.simple.RandomPlayer;
 import scala.Console;
@@ -39,7 +41,7 @@ class BasicTreeNode {
     // State in this node (closed loop)
     private AbstractGameState state;
 
-    private int delayThreshold = 400;
+    private int delayThreshold = 300;
 
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -61,9 +63,9 @@ class BasicTreeNode {
      * Performs full MCTS search, using the defined budget limits.
      */
     void mctsSearch() {
-        player.resetRAVEData();
+        player.resetAMAFData();
         MCRaveParams params = player.getParameters();
-        //Console.print(params.raveWeight);
+        //Console.print(params.AMAFWeight);
         // Variables for tracking time budget
         double avgTimeTaken;
         double acumTimeTaken = 0;
@@ -91,7 +93,7 @@ class BasicTreeNode {
             selected.backUp(delta); // performs the backpropagation step
             // Finished iteration
             numIters++;
-            //Console.print("The current RAVE Size is: "+ player.RAVECount.size()+"\n");
+            //Console.print("The current AMAF Size is: "+ player.AMAFCount.size()+"\n");
 
             // Check stopping condition
             PlayerConstants budgetType = params.budgetType;
@@ -113,7 +115,7 @@ class BasicTreeNode {
 
     /**
      * Selection + expansion steps.
-     * - Tree is traversed until a node not fully expanded is found.
+     * - Tree is tAMAFrsed until a node not fully expanded is found.
      * - A new child of this node is added to the tree.
      *
      * @return - new node added to the tree.
@@ -206,12 +208,12 @@ class BasicTreeNode {
             double hvVal = child.totValue;
             double childValue = hvVal / (child.nVisits + params.epsilon);
 
-            //Get RAVE value and count
-            double raveValue = player.RAVEValue.getOrDefault(action, 0.0);
-            double raveCount = player.RAVECount.getOrDefault(action, 0.0);
+            //Get AMAF value and count
+            double AMAFValue = player.AMAFValue.getOrDefault(action, 0.0);
+            double AMAFCount = player.preAMAFCount.getOrDefault(action, 0.0);
 
-            //Combines both original value and RAVE value
-            double combinedValue = (1 - alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
+            //Combines both original value and AMAF value
+            double combinedValue = (1 - alpha) * childValue + alpha * (AMAFValue / (AMAFCount + params.epsilon));
 
             // default to standard UCB
             double explorationTerm = params.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + params.epsilon));
@@ -238,6 +240,9 @@ class BasicTreeNode {
             throw new AssertionError("We have a null value in UCT : shouldn't really happen!");
 
         root.fmCallsCount++;  // log one iteration complete
+        if(player.preAMAFCount.containsKey(bestAction)){
+            player.AMAFCount.put(bestAction,player.preAMAFCount.get(bestAction));
+        }
         return bestAction;
     }
 
@@ -260,14 +265,14 @@ class BasicTreeNode {
                     AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
                     player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Random action: " + next + "\n");
+                    //Console.print("Random action: " + next + "\n");
 
                 } else {
                     // Perform biased rollout after the delay threshold is reached
                     AbstractAction next = biasedRollout(rolloutState);
                     player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Bias action: " + next + "\n");
+                    //Console.print("Bias action: " + next + "\n");
                 }
                 rolloutDepth++;
             }
@@ -287,11 +292,11 @@ class BasicTreeNode {
         Map<AbstractAction, Double> actionProbability = new HashMap<>();
         double totalBias = 0.0;
 
-        // Calculate biases based on RAVE values
+        // Calculate biases based on AMAF values
         for (AbstractAction action : availableActions) {
-            double raveValue = player.RAVEValue.getOrDefault(action, 0.0);
-            double raveCount = player.RAVECount.getOrDefault(action, 1.0);
-            double bias = raveValue / (raveCount + player.getParameters().epsilon);
+            double AMAFValue = player.AMAFValue.getOrDefault(action, 0.0);
+            double AMAFCount = player.preAMAFCount.getOrDefault(action, 1.0);
+            double bias = AMAFValue / (AMAFCount + player.getParameters().epsilon);
             actionProbability.put(action, bias);
             totalBias += bias;
         }
@@ -351,11 +356,14 @@ class BasicTreeNode {
 
             // Check if the currentROActions list is not empty before proceeding
             if (!player.currentROActions.isEmpty()) {
-                //Console.print("Is this even running?");
                 for (AbstractAction action : player.currentROActions) {
-                    player.RAVECount.put(action, player.RAVECount.getOrDefault(action, 0.0) + 1);
-                    player.RAVEValue.put(action, calculateRAVEValue(action, result));
-                    //Console.print(player.RAVECount);
+                    if(!player.AMAFCount.containsKey(action)) {
+                        player.preAMAFCount.put(action, player.preAMAFCount.getOrDefault(action, 0.0) + 1);
+                        player.AMAFValue.put(action, calculateAMAFValue(action, result, n.nVisits));
+                        //Console.print(player.AMAFCount);
+                    }else{
+                        player.AMAFValue.put(action, calculateAMAFValue(action, result, n.nVisits));
+                    }
                 }
             } else {
                 // Log or handle the case when there are no actions
@@ -399,11 +407,17 @@ class BasicTreeNode {
         return bestAction;
     }
 
-    private double calculateRAVEValue(AbstractAction action, double result) {
-        double currentRAVEValue = player.RAVEValue.getOrDefault(action, 0.0);
-        double currentRAVECount = player.RAVECount.getOrDefault(action, 0.0);
-        double RAVEDecay = player.getParameters().raveDecay;
-        return (currentRAVEValue * RAVEDecay * currentRAVECount + result) / (currentRAVECount + 1);
+    private double calculateAMAFValue(AbstractAction action, double result, double nVists) {
+        double currentAMAFValue = player.AMAFValue.getOrDefault(action, 1.0);
+        double currentAMAFCount;
+        if(!player.AMAFCount.containsKey(action)) {
+             currentAMAFCount = player.preAMAFCount.getOrDefault(action, 1.0);
+        }else{
+             currentAMAFCount = player.AMAFCount.getOrDefault(action, 1.0);
+        }
+        double AMAFDecay =Math.max(0,(currentAMAFCount - nVists) / (currentAMAFCount));
+        double calculatedAMAFValue = currentAMAFValue + (result - currentAMAFValue) / currentAMAFCount;
+        return calculatedAMAFValue * AMAFDecay;
     }
 }
 

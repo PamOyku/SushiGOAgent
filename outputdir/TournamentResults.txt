@@ -1290,3 +1290,237 @@ MCRave: Win rate 0.70 +/- 0.046	Mean Ordinal 1.42 +/- 0.07
 BasicMCTS: Win rate 0.18 +/- 0.038	Mean Ordinal 2.11 +/- 0.07
 rhea: Win rate 0.12 +/- 0.033	Mean Ordinal 2.41 +/- 0.07
 
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 31.50 points. BasicMCTS won 32.3% of the 96 games of the tournament. BasicMCTS won 32.3% of the 96 games it played during the tournament.
+BasicMCTS won 32.3% of the 96 games against MCRave.
+BasicMCTS won 32.3% of the 96 games against rhea.
+
+MCRave got 44.50 points. MCRave won 45.8% of the 96 games of the tournament. MCRave won 45.8% of the 96 games it played during the tournament.
+MCRave won 45.8% of the 96 games against BasicMCTS.
+MCRave won 45.8% of the 96 games against rhea.
+
+rhea got 20.00 points. rhea won 20.8% of the 96 games of the tournament. rhea won 20.8% of the 96 games it played during the tournament.
+rhea won 20.8% of the 96 games against BasicMCTS.
+rhea won 20.8% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.46 +/- 0.051	Mean Ordinal 1.78 +/- 0.08
+BasicMCTS: Win rate 0.33 +/- 0.048	Mean Ordinal 1.97 +/- 0.08
+rhea: Win rate 0.21 +/- 0.041	Mean Ordinal 2.23 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 31.00 points. BasicMCTS won 32.3% of the 96 games of the tournament. BasicMCTS won 32.3% of the 96 games it played during the tournament.
+BasicMCTS won 32.3% of the 96 games against MCRave.
+BasicMCTS won 32.3% of the 96 games against rhea.
+
+MCRave got 39.00 points. MCRave won 40.6% of the 96 games of the tournament. MCRave won 40.6% of the 96 games it played during the tournament.
+MCRave won 40.6% of the 96 games against BasicMCTS.
+MCRave won 40.6% of the 96 games against rhea.
+
+rhea got 26.00 points. rhea won 27.1% of the 96 games of the tournament. rhea won 27.1% of the 96 games it played during the tournament.
+rhea won 27.1% of the 96 games against BasicMCTS.
+rhea won 27.1% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.41 +/- 0.050	Mean Ordinal 1.84 +/- 0.08
+BasicMCTS: Win rate 0.32 +/- 0.048	Mean Ordinal 2.01 +/- 0.08
+rhea: Win rate 0.27 +/- 0.045	Mean Ordinal 2.14 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 29.50 points. BasicMCTS won 30.2% of the 96 games of the tournament. BasicMCTS won 30.2% of the 96 games it played during the tournament.
+BasicMCTS won 30.2% of the 96 games against MCRave.
+BasicMCTS won 30.2% of the 96 games against rhea.
+
+MCRave got 43.00 points. MCRave won 44.8% of the 96 games of the tournament. MCRave won 44.8% of the 96 games it played during the tournament.
+MCRave won 44.8% of the 96 games against BasicMCTS.
+MCRave won 44.8% of the 96 games against rhea.
+
+rhea got 23.50 points. rhea won 24.0% of the 96 games of the tournament. rhea won 24.0% of the 96 games it played during the tournament.
+rhea won 24.0% of the 96 games against BasicMCTS.
+rhea won 24.0% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.45 +/- 0.051	Mean Ordinal 1.77 +/- 0.08
+BasicMCTS: Win rate 0.31 +/- 0.047	Mean Ordinal 2.04 +/- 0.08
+rhea: Win rate 0.24 +/- 0.044	Mean Ordinal 2.15 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 53.00 points. BasicMCTS won 55.2% of the 96 games of the tournament. BasicMCTS won 55.2% of the 96 games it played during the tournament.
+BasicMCTS won 55.2% of the 96 games against MCRave.
+BasicMCTS won 55.2% of the 96 games against rhea.
+
+MCRave got 3.00 points. MCRave won 3.1% of the 96 games of the tournament. MCRave won 3.1% of the 96 games it played during the tournament.
+MCRave won 3.1% of the 96 games against BasicMCTS.
+MCRave won 3.1% of the 96 games against rhea.
+
+rhea got 40.00 points. rhea won 41.7% of the 96 games of the tournament. rhea won 41.7% of the 96 games it played during the tournament.
+rhea won 41.7% of the 96 games against BasicMCTS.
+rhea won 41.7% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+BasicMCTS: Win rate 0.55 +/- 0.051	Mean Ordinal 1.51 +/- 0.06
+rhea: Win rate 0.42 +/- 0.050	Mean Ordinal 1.70 +/- 0.07
+MCRave: Win rate 0.03 +/- 0.018	Mean Ordinal 2.79 +/- 0.05
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 28.50 points. BasicMCTS won 29.2% of the 96 games of the tournament. BasicMCTS won 29.2% of the 96 games it played during the tournament.
+BasicMCTS won 29.2% of the 96 games against MCRave.
+BasicMCTS won 29.2% of the 96 games against rhea.
+
+MCRave got 38.00 points. MCRave won 39.6% of the 96 games of the tournament. MCRave won 39.6% of the 96 games it played during the tournament.
+MCRave won 39.6% of the 96 games against BasicMCTS.
+MCRave won 39.6% of the 96 games against rhea.
+
+rhea got 29.50 points. rhea won 30.2% of the 96 games of the tournament. rhea won 30.2% of the 96 games it played during the tournament.
+rhea won 30.2% of the 96 games against BasicMCTS.
+rhea won 30.2% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.40 +/- 0.050	Mean Ordinal 1.89 +/- 0.08
+rhea: Win rate 0.31 +/- 0.047	Mean Ordinal 2.09 +/- 0.09
+BasicMCTS: Win rate 0.30 +/- 0.046	Mean Ordinal 2.00 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 47.50 points. BasicMCTS won 49.0% of the 96 games of the tournament. BasicMCTS won 49.0% of the 96 games it played during the tournament.
+BasicMCTS won 49.0% of the 96 games against MCRave.
+BasicMCTS won 49.0% of the 96 games against rhea.
+
+MCRave got 2.00 points. MCRave won 2.1% of the 96 games of the tournament. MCRave won 2.1% of the 96 games it played during the tournament.
+MCRave won 2.1% of the 96 games against BasicMCTS.
+MCRave won 2.1% of the 96 games against rhea.
+
+rhea got 46.50 points. rhea won 47.9% of the 96 games of the tournament. rhea won 47.9% of the 96 games it played during the tournament.
+rhea won 47.9% of the 96 games against BasicMCTS.
+rhea won 47.9% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+BasicMCTS: Win rate 0.49 +/- 0.051	Mean Ordinal 1.56 +/- 0.06
+rhea: Win rate 0.48 +/- 0.051	Mean Ordinal 1.59 +/- 0.07
+MCRave: Win rate 0.02 +/- 0.015	Mean Ordinal 2.83 +/- 0.04
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 28.00 points. BasicMCTS won 29.2% of the 96 games of the tournament. BasicMCTS won 29.2% of the 96 games it played during the tournament.
+BasicMCTS won 29.2% of the 96 games against MCRave.
+BasicMCTS won 29.2% of the 96 games against rhea.
+
+MCRave got 31.00 points. MCRave won 32.3% of the 96 games of the tournament. MCRave won 32.3% of the 96 games it played during the tournament.
+MCRave won 32.3% of the 96 games against BasicMCTS.
+MCRave won 32.3% of the 96 games against rhea.
+
+rhea got 37.00 points. rhea won 38.5% of the 96 games of the tournament. rhea won 38.5% of the 96 games it played during the tournament.
+rhea won 38.5% of the 96 games against BasicMCTS.
+rhea won 38.5% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+rhea: Win rate 0.39 +/- 0.050	Mean Ordinal 2.05 +/- 0.09
+MCRave: Win rate 0.32 +/- 0.048	Mean Ordinal 1.85 +/- 0.07
+BasicMCTS: Win rate 0.29 +/- 0.046	Mean Ordinal 2.09 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 31.00 points. BasicMCTS won 32.3% of the 96 games of the tournament. BasicMCTS won 32.3% of the 96 games it played during the tournament.
+BasicMCTS won 32.3% of the 96 games against MCRave.
+BasicMCTS won 32.3% of the 96 games against rhea.
+
+MCRave got 35.50 points. MCRave won 36.5% of the 96 games of the tournament. MCRave won 36.5% of the 96 games it played during the tournament.
+MCRave won 36.5% of the 96 games against BasicMCTS.
+MCRave won 36.5% of the 96 games against rhea.
+
+rhea got 29.50 points. rhea won 30.2% of the 96 games of the tournament. rhea won 30.2% of the 96 games it played during the tournament.
+rhea won 30.2% of the 96 games against BasicMCTS.
+rhea won 30.2% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.37 +/- 0.049	Mean Ordinal 1.91 +/- 0.08
+BasicMCTS: Win rate 0.32 +/- 0.048	Mean Ordinal 1.97 +/- 0.08
+rhea: Win rate 0.31 +/- 0.047	Mean Ordinal 2.11 +/- 0.09
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 30.50 points. BasicMCTS won 31.3% of the 96 games of the tournament. BasicMCTS won 31.3% of the 96 games it played during the tournament.
+BasicMCTS won 31.3% of the 96 games against MCRave.
+BasicMCTS won 31.3% of the 96 games against rhea.
+
+MCRave got 40.50 points. MCRave won 41.7% of the 96 games of the tournament. MCRave won 41.7% of the 96 games it played during the tournament.
+MCRave won 41.7% of the 96 games against BasicMCTS.
+MCRave won 41.7% of the 96 games against rhea.
+
+rhea got 25.00 points. rhea won 25.0% of the 96 games of the tournament. rhea won 25.0% of the 96 games it played during the tournament.
+rhea won 25.0% of the 96 games against BasicMCTS.
+rhea won 25.0% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.42 +/- 0.050	Mean Ordinal 1.85 +/- 0.08
+BasicMCTS: Win rate 0.32 +/- 0.047	Mean Ordinal 2.02 +/- 0.08
+rhea: Win rate 0.26 +/- 0.044	Mean Ordinal 2.10 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 35.00 points. BasicMCTS won 36.5% of the 96 games of the tournament. BasicMCTS won 36.5% of the 96 games it played during the tournament.
+BasicMCTS won 36.5% of the 96 games against MCRave.
+BasicMCTS won 36.5% of the 96 games against rhea.
+
+MCRave got 36.00 points. MCRave won 37.5% of the 96 games of the tournament. MCRave won 37.5% of the 96 games it played during the tournament.
+MCRave won 37.5% of the 96 games against BasicMCTS.
+MCRave won 37.5% of the 96 games against rhea.
+
+rhea got 25.00 points. rhea won 26.0% of the 96 games of the tournament. rhea won 26.0% of the 96 games it played during the tournament.
+rhea won 26.0% of the 96 games against BasicMCTS.
+rhea won 26.0% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.38 +/- 0.049	Mean Ordinal 1.81 +/- 0.07
+BasicMCTS: Win rate 0.36 +/- 0.049	Mean Ordinal 2.04 +/- 0.09
+rhea: Win rate 0.26 +/- 0.045	Mean Ordinal 2.15 +/- 0.08
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 51.00 points. BasicMCTS won 53.1% of the 96 games of the tournament. BasicMCTS won 53.1% of the 96 games it played during the tournament.
+BasicMCTS won 53.1% of the 96 games against MCRave.
+BasicMCTS won 53.1% of the 96 games against rhea.
+
+MCRave got 5.00 points. MCRave won 5.2% of the 96 games of the tournament. MCRave won 5.2% of the 96 games it played during the tournament.
+MCRave won 5.2% of the 96 games against BasicMCTS.
+MCRave won 5.2% of the 96 games against rhea.
+
+rhea got 40.00 points. rhea won 41.7% of the 96 games of the tournament. rhea won 41.7% of the 96 games it played during the tournament.
+rhea won 41.7% of the 96 games against BasicMCTS.
+rhea won 41.7% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+BasicMCTS: Win rate 0.53 +/- 0.051	Mean Ordinal 1.52 +/- 0.06
+rhea: Win rate 0.42 +/- 0.050	Mean Ordinal 1.67 +/- 0.06
+MCRave: Win rate 0.05 +/- 0.023	Mean Ordinal 2.80 +/- 0.05
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 59.50 points. BasicMCTS won 61.5% of the 96 games of the tournament. BasicMCTS won 61.5% of the 96 games it played during the tournament.
+BasicMCTS won 61.5% of the 96 games against MCRave.
+BasicMCTS won 61.5% of the 96 games against rhea.
+
+MCRave got 4.50 points. MCRave won 4.2% of the 96 games of the tournament. MCRave won 4.2% of the 96 games it played during the tournament.
+MCRave won 4.2% of the 96 games against BasicMCTS.
+MCRave won 4.2% of the 96 games against rhea.
+
+rhea got 32.00 points. rhea won 33.3% of the 96 games of the tournament. rhea won 33.3% of the 96 games it played during the tournament.
+rhea won 33.3% of the 96 games against BasicMCTS.
+rhea won 33.3% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+BasicMCTS: Win rate 0.62 +/- 0.049	Mean Ordinal 1.44 +/- 0.06
+rhea: Win rate 0.33 +/- 0.048	Mean Ordinal 1.80 +/- 0.07
+MCRave: Win rate 0.05 +/- 0.021	Mean Ordinal 2.75 +/- 0.06
+
+Game: SushiGo, Players: 3, Mode: EXHAUSTIVE, TotalGames: 96, GamesPerMatchup: 16
+BasicMCTS got 34.00 points. BasicMCTS won 35.4% of the 96 games of the tournament. BasicMCTS won 35.4% of the 96 games it played during the tournament.
+BasicMCTS won 35.4% of the 96 games against MCRave.
+BasicMCTS won 35.4% of the 96 games against rhea.
+
+MCRave got 42.00 points. MCRave won 43.8% of the 96 games of the tournament. MCRave won 43.8% of the 96 games it played during the tournament.
+MCRave won 43.8% of the 96 games against BasicMCTS.
+MCRave won 43.8% of the 96 games against rhea.
+
+rhea got 20.00 points. rhea won 20.8% of the 96 games of the tournament. rhea won 20.8% of the 96 games it played during the tournament.
+rhea won 20.8% of the 96 games against BasicMCTS.
+rhea won 20.8% of the 96 games against MCRave.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCRave: Win rate 0.44 +/- 0.051	Mean Ordinal 1.78 +/- 0.08
+BasicMCTS: Win rate 0.35 +/- 0.049	Mean Ordinal 2.02 +/- 0.09
+rhea: Win rate 0.21 +/- 0.041	Mean Ordinal 2.20 +/- 0.08
+

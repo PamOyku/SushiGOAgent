@@ -15,9 +15,9 @@ import java.util.*;
  */
 public class MCRavePlayer extends AbstractPlayer {
 
-    Map<AbstractAction, Double> RAVEValue = new HashMap<>();
-    Map<AbstractAction, Double> RAVECount = new HashMap<>();
-
+    Map<AbstractAction, Double> AMAFValue = new HashMap<>();
+    Map<AbstractAction, Double> preAMAFCount = new HashMap<>();
+    Map<AbstractAction, Double> AMAFCount = new HashMap<>();
     List<AbstractAction> currentROActions = new ArrayList<>();
 
     public MCRavePlayer() {
@@ -63,9 +63,10 @@ public class MCRavePlayer extends AbstractPlayer {
         getParameters().heuristic = heuristic;
     }
 
-    public void resetRAVEData() {
-        RAVEValue.clear();
-        RAVECount.clear();
+    public void resetAMAFData() {
+        AMAFValue.clear();
+        AMAFCount.clear();
+        preAMAFCount.clear();
     }
 
     @Override
