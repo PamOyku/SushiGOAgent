@@ -260,14 +260,12 @@ class BasicTreeNode {
                     AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
                     player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Random action: " + next + "\n");
 
                 } else {
                     // Perform biased rollout after the delay threshold is reached
                     AbstractAction next = biasedRollout(rolloutState);
                     player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Bias action: " + next + "\n");
                 }
                 rolloutDepth++;
             }
@@ -351,7 +349,6 @@ class BasicTreeNode {
 
             // Check if the currentROActions list is not empty before proceeding
             if (!player.currentROActions.isEmpty()) {
-                //Console.print("Is this even running?");
                 for (AbstractAction action : player.currentROActions) {
                     player.RAVECount.put(action, player.RAVECount.getOrDefault(action, 0.0) + 1);
                     player.RAVEValue.put(action, calculateRAVEValue(action, result));
@@ -359,7 +356,7 @@ class BasicTreeNode {
                 }
             } else {
                 // Log or handle the case when there are no actions
-                System.err.println("Warning: No actions recorded for back up!");
+                //System.err.println("Warning: No actions recorded for back up!");
             }
 
             n = n.parent;
