@@ -2,8 +2,8 @@
 	"class" : "players.MCRave.MCRaveParams",
 	"K" : 1.414,
 	"rolloutLength" : 100,
-	"maxTreeDepth" : 30,
-	"raveWeight" : 0.9,
+	"maxTreeDepth" : 100,
+	"raveWeight" : 0.3,
 	"heuristic" : {
  		"class" : "players.heuristics.ScoreHeuristic"
 	},

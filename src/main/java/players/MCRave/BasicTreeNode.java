@@ -39,15 +39,7 @@ class BasicTreeNode {
     // State in this node (closed loop)
     private AbstractGameState state;
 
-    //Dictionary that binds RAVEValue to each GameState
-    private Map<AbstractAction, Double> RAVEValue = new HashMap<>();
-
-    //Dictionary that binds RAVECount to each GameState
-    private Map<AbstractAction, Double> RAVECount = new HashMap<>();
-
-    private List<AbstractAction> currentROActions = new ArrayList<>();
-
-    private int delayThreshold = 350;
+    private int delayThreshold = 0;
 
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -69,7 +61,8 @@ class BasicTreeNode {
      * Performs full MCTS search, using the defined budget limits.
      */
     void mctsSearch() {
-
+        Console.print("Backup to the top");
+        player.resetRAVEData();
         MCRaveParams params = player.getParameters();
 
         // Variables for tracking time budget
@@ -99,7 +92,7 @@ class BasicTreeNode {
             selected.backUp(delta); // performs the backpropagation step
             // Finished iteration
             numIters++;
-            Console.print("The current RAVE Size is: "+RAVECount.size()+"\n");
+            Console.print("The current RAVE Size is: "+ player.RAVECount.size()+"\n");
 
             // Check stopping condition
             PlayerConstants budgetType = params.budgetType;
@@ -215,8 +208,8 @@ class BasicTreeNode {
             double childValue = hvVal / (child.nVisits + params.epsilon);
 
             //Get RAVE value and count
-            double raveValue = RAVEValue.getOrDefault(action, 0.0);
-            double raveCount = RAVECount.getOrDefault(action, 0.0);
+            double raveValue = player.RAVEValue.getOrDefault(action, 0.0);
+            double raveCount = player.RAVECount.getOrDefault(action, 0.0);
 
             //Combines both original value and RAVE value
             double combinedValue = (1 - alpha) * childValue + alpha * (raveValue / (raveCount + params.epsilon));
@@ -255,25 +248,27 @@ class BasicTreeNode {
      * @return - value of rollout.
      */
     private double rollOut(int numIters) {
-        currentROActions.clear();
+        player.currentROActions.clear();
         int rolloutDepth = 0; // Counting from the end of the tree
 
         // Copy the current state for rollout
         AbstractGameState rolloutState = state.copy();
         if (player.getParameters().rolloutLength > 0) {
             while (!finishRollout(rolloutState, rolloutDepth)) {
-                //Console.print("Current rollout depth:"+rolloutDepth+"\n");
+                Console.print("Current rollout depth:"+rolloutDepth+"\n");
                 if (numIters < delayThreshold) {
                     // Perform actions normally without biased rollout
                     AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
+                    player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Random"+"\n");
+                    Console.print("Random action: " + next + "\n");
+
                 } else {
                     // Perform biased rollout after the delay threshold is reached
                     AbstractAction next = biasedRollout(rolloutState);
-                    currentROActions.add(next);
+                    player.currentROActions.add(next);
                     advance(rolloutState, next);
-                    Console.print("Bias"+"\n");
+                    Console.print("Bias action: " + next + "\n");
                 }
                 rolloutDepth++;
             }
@@ -295,8 +290,8 @@ class BasicTreeNode {
 
         // Calculate biases based on RAVE values
         for (AbstractAction action : availableActions) {
-            double raveValue = RAVEValue.getOrDefault(action, 0.0);
-            double raveCount = RAVECount.getOrDefault(action, 1.0);
+            double raveValue = player.RAVEValue.getOrDefault(action, 0.0);
+            double raveCount = player.RAVECount.getOrDefault(action, 1.0);
             double bias = raveValue / (raveCount + player.getParameters().epsilon);
             actionProbability.put(action, bias);
             totalBias += bias;
@@ -332,11 +327,16 @@ class BasicTreeNode {
      * @return - true if rollout finished, false otherwise
      */
     private boolean finishRollout(AbstractGameState rollerState, int depth) {
-        if (depth >= player.getParameters().rolloutLength)
-            return true;
-
+        if (depth >= player.getParameters().rolloutLength){
+            Console.print("Rollout finished due to max depth: " + depth + "\n");
+        return true;
+    }
         // End of game
-        return !rollerState.isNotTerminal();
+        boolean isTerminal = !rollerState.isNotTerminal();
+        if (isTerminal) {
+            Console.print("Rollout finished due to terminal state: " + rollerState + "\n");
+        }
+        return isTerminal;
     }
 
     /**
@@ -351,14 +351,16 @@ class BasicTreeNode {
             n.totValue += result;
 
             // Check if the currentROActions list is not empty before proceeding
-            if (!n.currentROActions.isEmpty()) {
-                for (AbstractAction action : n.currentROActions) {
-                    RAVECount.put(action, RAVECount.getOrDefault(action, 0.0) + 1);
-                    RAVEValue.put(action, calculateRAVEValue(action, result));
+            if (!player.currentROActions.isEmpty()) {
+                Console.print("Is this even running?");
+                for (AbstractAction action : player.currentROActions) {
+                    player.RAVECount.put(action, player.RAVECount.getOrDefault(action, 0.0) + 1);
+                    player.RAVEValue.put(action, calculateRAVEValue(action, result));
+                    Console.print(player.RAVECount);
                 }
             } else {
                 // Log or handle the case when there are no actions
-                //System.err.println("Warning: No actions recorded for back up!");
+                System.err.println("Warning: No actions recorded for back up!");
             }
 
             n = n.parent;
@@ -399,8 +401,8 @@ class BasicTreeNode {
     }
 
     private double calculateRAVEValue(AbstractAction action, double result) {
-        double currentRAVEValue = RAVEValue.getOrDefault(action, 0.0);
-        double currentRAVECount = RAVECount.getOrDefault(action, 0.0);
+        double currentRAVEValue = player.RAVEValue.getOrDefault(action, 0.0);
+        double currentRAVECount = player.RAVECount.getOrDefault(action, 0.0);
         return (currentRAVEValue * currentRAVECount + result) / (currentRAVECount + 1);
     }
 }

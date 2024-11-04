@@ -5,8 +5,7 @@ import core.AbstractPlayer;
 import core.actions.AbstractAction;
 import core.interfaces.IStateHeuristic;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -15,6 +14,11 @@ import java.util.Random;
  * SingleTreeNode.
  */
 public class MCRavePlayer extends AbstractPlayer {
+
+    Map<AbstractAction, Double> RAVEValue = new HashMap<>();
+    Map<AbstractAction, Double> RAVECount = new HashMap<>();
+
+    List<AbstractAction> currentROActions = new ArrayList<>();
 
     public MCRavePlayer() {
         this(System.currentTimeMillis());
@@ -25,6 +29,7 @@ public class MCRavePlayer extends AbstractPlayer {
         // for clarity we create a new set of parameters here, but we could just use the default parameters
         parameters.setRandomSeed(seed);
         rnd = new Random(seed);
+
 
         // These parameters can be changed, and will impact the Basic MCTS algorithm
         MCRaveParams params = getParameters();
@@ -58,6 +63,10 @@ public class MCRavePlayer extends AbstractPlayer {
         getParameters().heuristic = heuristic;
     }
 
+    public void resetRAVEData() {
+        RAVEValue.clear();
+        RAVECount.clear();
+    }
 
     @Override
     public String toString() {
