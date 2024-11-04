@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class BasicMCTSParams extends PlayerParameters {
 
     public double K = Math.sqrt(2); // UCBI Exploration constant
-    public int rolloutLength = 10; // assuming we have a good heuristic (Max length fo the rollouts)
+    public int rolloutLength = 100; // assuming we have a good heuristic (Max length fo the rollouts)
     public int maxTreeDepth = 100; // effectively no limit (Max length the tree can grow)
     public double epsilon = 1e-6;
     public IStateHeuristic heuristic = AbstractGameState::getHeuristicScore;

@@ -39,7 +39,7 @@ class BasicTreeNode {
     // State in this node (closed loop)
     private AbstractGameState state;
 
-    private int delayThreshold = 0;
+    private int delayThreshold = 400;
 
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -61,10 +61,9 @@ class BasicTreeNode {
      * Performs full MCTS search, using the defined budget limits.
      */
     void mctsSearch() {
-        Console.print("Backup to the top");
         player.resetRAVEData();
         MCRaveParams params = player.getParameters();
-
+        //Console.print(params.raveWeight);
         // Variables for tracking time budget
         double avgTimeTaken;
         double acumTimeTaken = 0;
@@ -92,7 +91,7 @@ class BasicTreeNode {
             selected.backUp(delta); // performs the backpropagation step
             // Finished iteration
             numIters++;
-            Console.print("The current RAVE Size is: "+ player.RAVECount.size()+"\n");
+            //Console.print("The current RAVE Size is: "+ player.RAVECount.size()+"\n");
 
             // Check stopping condition
             PlayerConstants budgetType = params.budgetType;
@@ -255,7 +254,7 @@ class BasicTreeNode {
         AbstractGameState rolloutState = state.copy();
         if (player.getParameters().rolloutLength > 0) {
             while (!finishRollout(rolloutState, rolloutDepth)) {
-                Console.print("Current rollout depth:"+rolloutDepth+"\n");
+                //Console.print("Current rollout depth:"+rolloutDepth+"\n");
                 if (numIters < delayThreshold) {
                     // Perform actions normally without biased rollout
                     AbstractAction next = randomPlayer.getAction(rolloutState, randomPlayer.getForwardModel().computeAvailableActions(rolloutState, randomPlayer.parameters.actionSpace));
@@ -328,13 +327,13 @@ class BasicTreeNode {
      */
     private boolean finishRollout(AbstractGameState rollerState, int depth) {
         if (depth >= player.getParameters().rolloutLength){
-            Console.print("Rollout finished due to max depth: " + depth + "\n");
+            //Console.print("Rollout finished due to max depth: " + depth + "\n");
         return true;
     }
         // End of game
         boolean isTerminal = !rollerState.isNotTerminal();
         if (isTerminal) {
-            Console.print("Rollout finished due to terminal state: " + rollerState + "\n");
+            //Console.print("Rollout finished due to terminal state: " + rollerState + "\n");
         }
         return isTerminal;
     }
@@ -352,11 +351,11 @@ class BasicTreeNode {
 
             // Check if the currentROActions list is not empty before proceeding
             if (!player.currentROActions.isEmpty()) {
-                Console.print("Is this even running?");
+                //Console.print("Is this even running?");
                 for (AbstractAction action : player.currentROActions) {
                     player.RAVECount.put(action, player.RAVECount.getOrDefault(action, 0.0) + 1);
                     player.RAVEValue.put(action, calculateRAVEValue(action, result));
-                    Console.print(player.RAVECount);
+                    //Console.print(player.RAVECount);
                 }
             } else {
                 // Log or handle the case when there are no actions
@@ -403,7 +402,8 @@ class BasicTreeNode {
     private double calculateRAVEValue(AbstractAction action, double result) {
         double currentRAVEValue = player.RAVEValue.getOrDefault(action, 0.0);
         double currentRAVECount = player.RAVECount.getOrDefault(action, 0.0);
-        return (currentRAVEValue * currentRAVECount + result) / (currentRAVECount + 1);
+        double RAVEDecay = player.getParameters().raveDecay;
+        return (currentRAVEValue * RAVEDecay * currentRAVECount + result) / (currentRAVECount + 1);
     }
 }
 
