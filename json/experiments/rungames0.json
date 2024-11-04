@@ -4,5 +4,5 @@
   "mode" : "exhaustive",
   "matchups" : 1000,
   "verbose" : false,
-  "seed" : 740234
+  "seed" : 740234,
 }

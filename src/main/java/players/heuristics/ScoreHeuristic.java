@@ -19,27 +19,21 @@ public class ScoreHeuristic implements IStateHeuristic {
      * @param playerId - player id
      * @return heuristics score
      */
-
-
     @Override
     public double evaluateState(AbstractGameState gs, int playerId) {
-        double score = gs.getGameScore(playerId);// get current score of player
+        double score = gs.getGameScore(playerId);
         double heuristicValue = score;
         if (gs.getPlayerResults()[playerId] == CoreConstants.GameResult.WIN_GAME)
             return score * 1.5;
         else if (gs.getPlayerResults()[playerId] == CoreConstants.GameResult.LOSE_GAME)
             return score * 0.5;
 
-        double playerWeight = 0.8;
-        double opponentWeight = 0.2;
 
         //Card specific heuristics
         if (gs instanceof SGGameState sgState){
 
             heuristicValue += calculateHistoricalBonuses(sgState, playerId);
-            heuristicValue += evaluateplayerHandContents(sgState, playerId) * playerWeight; // weighted contrubition from players cards.
-            heuristicValue += evaluateopponentHandContents(sgState, playerId) * opponentWeight; // weighted contrubution from opponents cards.
-
+            heuristicValue += evaluateHandContents(sgState, playerId);
         }
 
         return heuristicValue;
@@ -64,66 +58,34 @@ public class ScoreHeuristic implements IStateHeuristic {
         return bonus;
     }
 
-    private double evaluateplayerHandContents(SGGameState sgState, int playerId) {
+    private double evaluateHandContents(SGGameState sgState, int playerId){
         double handBonus = 0.0;
 
-
-        //players hand
         Deck<SGCard> playerHand = sgState.getPlayerHands().get(playerId);
         int makiCount = 0;
         int tempuraCount = 0;
         int sashimiCount = 0;
         int puddingCount = 0;
 
+        for (int opponentId = 0; opponentId < sgState.getNPlayers(); opponentId++){
+            if (opponentId != playerId && sgState.hasSeenHand(playerId, opponentId)){
 
-        for (SGCard card : playerHand.getComponents()) {
-            switch (card.type) {
-                case Maki -> makiCount++;
-                case Tempura -> tempuraCount++;
-                case Sashimi -> sashimiCount++;
-                case Pudding -> puddingCount++;
-
+                Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
+                for (SGCard card : opponentHand.getComponents()){
+                    if ( card.type == SGCard.SGCardType.Maki) makiCount++;
+                    if ( card.type == SGCard.SGCardType.Tempura) tempuraCount++;
+                    if ( card.type == SGCard.SGCardType.Sashimi) sashimiCount++;
+                    if ( card.type == SGCard.SGCardType.Pudding) puddingCount++;
+                }
             }
         }
 
         if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
-        if (tempuraCount == 1) handBonus += 3;
-        if (sashimiCount == 2) handBonus += 6;
+        if (tempuraCount == 1) handBonus +=3;
+        if (sashimiCount == 2) handBonus +=6;
 
         return handBonus;
-
     }
-        private double evaluateopponentHandContents(SGGameState sgState, int playerId){
-
-            double handBonus = 0.0;
-
-            int makiCount = 0;
-            int tempuraCount = 0;
-            int sashimiCount = 0;
-            int puddingCount = 0;
-
-            for (int opponentId = 0; opponentId < sgState.getNPlayers(); opponentId++){
-                if (opponentId != playerId && sgState.hasSeenHand(playerId, opponentId)){
-
-                    Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
-                    for (SGCard card : opponentHand.getComponents()){
-                        switch (card.type){
-                            case Maki -> makiCount++;
-                            case Tempura -> tempuraCount++;
-                            case Sashimi -> sashimiCount++;
-                            case Pudding -> puddingCount++;
-                        }
-                    }
-                }
-            }
-            if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
-            if (tempuraCount == 1) handBonus +=3;
-            if (sashimiCount == 2) handBonus +=6;
-
-            return handBonus;
-        }
-
-
     @Override
     public double minValue() {
         return Double.NEGATIVE_INFINITY;
