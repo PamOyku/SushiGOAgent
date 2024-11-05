@@ -1,7 +1,6 @@
 package players.heuristics;
 
 import core.AbstractGameState;
-import core.AbstractParameters;
 import core.interfaces.IStateHeuristic;
 import evaluation.optimisation.TunableParameters;
 
@@ -25,7 +24,7 @@ public class CoarseTunableHeuristic extends TunableParameters implements IStateH
         WIN_PLUS (new WinPlusHeuristic(1000.0)),
         ORDINAL (new OrdinalPosition()),
         SCORE_ONLY (new PureScoreHeuristic()),
-        SCORE_PLUS (new ScoreHeuristic()),
+        SCORE_PLUS (new AdjustedScoreHeuristic()),
         LEADER (new LeaderHeuristic());
 
         HeuristicType(IStateHeuristic heuristic) {

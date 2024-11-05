@@ -41,7 +41,7 @@ class BasicTreeNode {
     // State in this node (closed loop)
     private AbstractGameState state;
 
-    private int delayThreshold = 300;
+    private int delayThreshold = 200;
 
     protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
@@ -211,7 +211,6 @@ class BasicTreeNode {
             //Get AMAF value and count
             double AMAFValue = player.AMAFValue.getOrDefault(action, 0.0);
             double AMAFCount = player.preAMAFCount.getOrDefault(action, 0.0);
-
             //Combines both original value and AMAF value
             double combinedValue = (1 - alpha) * childValue + alpha * (AMAFValue / (AMAFCount + params.epsilon));
 
@@ -294,7 +293,7 @@ class BasicTreeNode {
 
         // Calculate biases based on AMAF values
         for (AbstractAction action : availableActions) {
-            double AMAFValue = player.AMAFValue.getOrDefault(action, 0.0);
+            double AMAFValue = player.AMAFValue.getOrDefault(action, 1.0);
             double AMAFCount = player.preAMAFCount.getOrDefault(action, 1.0);
             double bias = AMAFValue / (AMAFCount + player.getParameters().epsilon);
             actionProbability.put(action, bias);
@@ -407,7 +406,7 @@ class BasicTreeNode {
         return bestAction;
     }
 
-    private double calculateAMAFValue(AbstractAction action, double result, double nVists) {
+    private double calculateAMAFValue(AbstractAction action, double result, double nVisits) {
         double currentAMAFValue = player.AMAFValue.getOrDefault(action, 1.0);
         double currentAMAFCount;
         if(!player.AMAFCount.containsKey(action)) {
@@ -415,7 +414,7 @@ class BasicTreeNode {
         }else{
              currentAMAFCount = player.AMAFCount.getOrDefault(action, 1.0);
         }
-        double AMAFDecay =Math.max(0,(currentAMAFCount - nVists) / (currentAMAFCount));
+        double AMAFDecay =Math.max(0,(currentAMAFCount - nVisits) / (currentAMAFCount));
         double calculatedAMAFValue = currentAMAFValue + (result - currentAMAFValue) / currentAMAFCount;
         return calculatedAMAFValue * AMAFDecay;
     }
