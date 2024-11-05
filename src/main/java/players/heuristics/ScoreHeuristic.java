@@ -95,13 +95,27 @@ public class ScoreHeuristic implements IStateHeuristic {
 
         for (SGCard card : playerHand.getComponents()) {
             switch (card.type) {
-                case Maki -> makiCount++;
-                case Tempura -> tempuraCount++;
-                case Sashimi -> sashimiCount++;
-                case EggNigiri -> eggNigiriCount++;
-                case SquidNigiri -> squidNigiriCount++;
-                case SalmonNigiri -> salmonNigiriCount++;
-                case Pudding -> puddingCount++;
+                case Maki:
+                    makiCount++;
+                    break;
+                case Tempura:
+                    tempuraCount++;
+                    break;
+                case Sashimi:
+                    sashimiCount++;
+                    break;
+                case EggNigiri:
+                    eggNigiriCount++;
+                    break;
+                case SquidNigiri:
+                    squidNigiriCount++;
+                    break;
+                case SalmonNigiri:
+                    salmonNigiriCount++;
+                    break;
+                case Pudding:
+                    puddingCount++;
+                    break;
 
 
             }
@@ -138,15 +152,33 @@ public class ScoreHeuristic implements IStateHeuristic {
                 Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
                 for (SGCard card : opponentHand.getComponents()){
                     switch (card.type){
-                        case Maki -> makiCount++;
-                        case Tempura -> tempuraCount++;
-                        case Sashimi -> sashimiCount++;
-                        case SquidNigiri -> squidNigiriCount++;
-                        case SalmonNigiri -> salmonNigiriCount++;
-                        case EggNigiri -> eggNigiriCount++;
-                        case Wasabi -> wasabiCount++;
-                        case Chopsticks -> chopsticksCount++;
-                        case Pudding -> puddingCount++;
+                        case Maki:
+                            makiCount++;
+                            break;
+                        case Tempura:
+                            tempuraCount++;
+                            break;
+                        case Sashimi:
+                            sashimiCount++;
+                            break;
+                        case SquidNigiri:
+                            squidNigiriCount++;
+                            break;
+                        case SalmonNigiri:
+                            salmonNigiriCount++;
+                            break;
+                        case EggNigiri:
+                            eggNigiriCount++;
+                            break;
+                        case Wasabi:
+                            wasabiCount++;
+                            break;
+                        case Chopsticks:
+                            chopsticksCount++;
+                            break;
+                        case Pudding:
+                            puddingCount++;
+                            break;
                     }
                 }
             }
@@ -180,14 +212,30 @@ public class ScoreHeuristic implements IStateHeuristic {
 
         for (SGCard card : playerPlayedCards.getComponents()){
             switch (card.type){
-                case Tempura -> tempuraPlayed++;
-                case Sashimi -> sashimiPlayed++;
-                case Maki -> makiPlayed++;
-                case SquidNigiri -> squidNigiriPlayed++;
-                case SalmonNigiri -> salmonNigiriPlayed++;
-                case EggNigiri -> eggNigiriPlayed++;
-                case Wasabi -> wasabiPlayed++;
-                case Chopsticks -> chopsticksPlayed++;
+                case Tempura:
+                    tempuraPlayed++;
+                    break;
+                case Sashimi:
+                    sashimiPlayed++;
+                    break;
+                case Maki:
+                    makiPlayed++;
+                    break;
+                case SquidNigiri:
+                    squidNigiriPlayed++;
+                    break;
+                case SalmonNigiri:
+                    salmonNigiriPlayed++;
+                    break;
+                case EggNigiri:
+                    eggNigiriPlayed++;
+                    break;
+                case Wasabi:
+                    wasabiPlayed++;
+                    break;
+                case Chopsticks:
+                    chopsticksPlayed++;
+                    break;
             }
         }
 
