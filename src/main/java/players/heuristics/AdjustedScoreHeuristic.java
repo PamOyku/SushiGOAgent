@@ -8,6 +8,7 @@ import games.sushigo.SGGameState;
 import games.sushigo.cards.SGCard;
 import java.util.Map;
 import core.components.Deck;
+import java.util.List;
 
 public class AdjustedScoreHeuristic implements IStateHeuristic {
 
@@ -37,9 +38,9 @@ public class AdjustedScoreHeuristic implements IStateHeuristic {
         if (gs instanceof SGGameState sgState){
 
             heuristicValue += calculateHistoricalBonuses(sgState, playerId);
-            heuristicValue += evaluateplayerHandContents(sgState, playerId) * playerWeight; // weighted contrubition from players cards.
-            heuristicValue += evaluateopponentHandContents(sgState, playerId) * opponentWeight; // weighted contrubution from opponents cards.
-
+            heuristicValue += evaluatePlayerHandContents(sgState, playerId) * playerWeight; // weighted contrubition from players cards.
+            heuristicValue += evaluateOpponentHandContents(sgState, playerId) * opponentWeight; // weighted contrubution from opponents cards.
+            heuristicValue += evaluatePlayedCards(sgState, playerId) * 0.5; //evaluation of played cards
         }
 
         return heuristicValue;
@@ -64,7 +65,7 @@ public class AdjustedScoreHeuristic implements IStateHeuristic {
         return bonus;
     }
 
-    private double evaluateplayerHandContents(SGGameState sgState, int playerId) {
+    private double evaluatePlayerHandContents(SGGameState sgState, int playerId) {
         double handBonus = 0.0;
 
 
@@ -93,35 +94,62 @@ public class AdjustedScoreHeuristic implements IStateHeuristic {
         return handBonus;
 
     }
-        private double evaluateopponentHandContents(SGGameState sgState, int playerId){
 
-            double handBonus = 0.0;
+    private double evaluateOpponentHandContents(SGGameState sgState, int playerId){
 
-            int makiCount = 0;
-            int tempuraCount = 0;
-            int sashimiCount = 0;
-            int puddingCount = 0;
+        double handBonus = 0.0;
 
-            for (int opponentId = 0; opponentId < sgState.getNPlayers(); opponentId++){
-                if (opponentId != playerId && sgState.hasSeenHand(playerId, opponentId)){
+        int makiCount = 0;
+        int tempuraCount = 0;
+        int sashimiCount = 0;
+        int puddingCount = 0;
 
-                    Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
-                    for (SGCard card : opponentHand.getComponents()){
-                        switch (card.type){
-                            case Maki -> makiCount++;
-                            case Tempura -> tempuraCount++;
-                            case Sashimi -> sashimiCount++;
-                            case Pudding -> puddingCount++;
-                        }
+        for (int opponentId = 0; opponentId < sgState.getNPlayers(); opponentId++){
+            if (opponentId != playerId && sgState.hasSeenHand(playerId, opponentId)){
+
+                Deck<SGCard> opponentHand = sgState.getPlayerHands().get(opponentId);
+                for (SGCard card : opponentHand.getComponents()){
+                    switch (card.type){
+                        case Maki -> makiCount++;
+                        case Tempura -> tempuraCount++;
+                        case Sashimi -> sashimiCount++;
+                        case Pudding -> puddingCount++;
                     }
                 }
             }
-            if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
-            if (tempuraCount == 1) handBonus +=3;
-            if (sashimiCount == 2) handBonus +=6;
-
-            return handBonus;
         }
+        if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
+        if (tempuraCount == 1) handBonus +=3;
+        if (sashimiCount == 2) handBonus +=6;
+
+        return handBonus;
+    }
+
+    private double evaluatePlayedCards(SGGameState sgState, int playerId){
+        double playedCardsBonus = 0.0;
+        List<Deck<SGCard>>playedCards = sgState.getPlayedCards();
+        Deck<SGCard> playerPlayedCards = playedCards.get(playerId);
+
+
+        int tempuraPlayed = 0;
+        int sashimiPlayed = 0;
+        int makiPlayed = 0;
+
+
+        for (SGCard card : playerPlayedCards.getComponents()){
+            switch (card.type){
+                case Tempura -> tempuraPlayed++;
+                case Sashimi -> sashimiPlayed++;
+                case Maki -> makiPlayed++;
+            }
+        }
+
+        if (tempuraPlayed >= 2) playedCardsBonus += 5;
+        if (sashimiPlayed >= 3) playedCardsBonus += 10;
+        if (makiPlayed >= 3) playedCardsBonus += makiPlayed * 1.5;
+
+        return playedCardsBonus;
+    }
 
 
     @Override
