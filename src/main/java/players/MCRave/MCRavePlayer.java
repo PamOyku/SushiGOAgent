@@ -8,17 +8,13 @@ import core.interfaces.IStateHeuristic;
 import java.util.*;
 
 
-/**
- * This is a simple version of MCTS that may be useful for newcomers to TAG and MCTS-like algorithms
- * It strips out some of the additional configuration of MCTSPlayer. It uses BasicTreeNode in place of
- * SingleTreeNode.
- */
+
 public class MCRavePlayer extends AbstractPlayer {
 
-    Map<AbstractAction, Double> AMAFValue = new HashMap<>();
-    Map<AbstractAction, Double> preAMAFCount = new HashMap<>();
-    Map<AbstractAction, Double> AMAFCount = new HashMap<>();
-    List<AbstractAction> currentROActions = new ArrayList<>();
+    Map<AbstractAction, Double> AMAFValue = new HashMap<>(); //This contains the AMAF Values for all states
+    Map<AbstractAction, Double> AMAFCount = new HashMap<>(); //This contains the count for appearances for all states
+    Map<AbstractAction, Double> RAVECount = new HashMap<>(); //This contains the AMAFValue's that have already been selected as best action
+    List<AbstractAction> currentROActions = new ArrayList<>(); //This contains all the actions in the current rollout
 
     public MCRavePlayer() {
         this(System.currentTimeMillis());
@@ -45,7 +41,7 @@ public class MCRavePlayer extends AbstractPlayer {
     @Override
     public AbstractAction _getAction(AbstractGameState gameState, List<AbstractAction> actions) {
         // Search for best action from the root
-        BasicTreeNode root = new BasicTreeNode(this, null, gameState, rnd);
+        RAVETreeNode root = new RAVETreeNode(this, null, gameState, rnd);
 
         // mctsSearch does all of the hard work
         root.mctsSearch();
@@ -63,10 +59,11 @@ public class MCRavePlayer extends AbstractPlayer {
         getParameters().heuristic = heuristic;
     }
 
+    //Resets all the AMAF Maps
     public void resetAMAFData() {
         AMAFValue.clear();
+        RAVECount.clear();
         AMAFCount.clear();
-        preAMAFCount.clear();
     }
 
     @Override

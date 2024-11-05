@@ -13,7 +13,7 @@ public class MCRaveParams extends PlayerParameters {
     public double K = Math.sqrt(2); // UCBI Exploration constant
     public int rolloutLength = 200; // assuming we have a good heuristic (Max length of the rollouts)
     public int maxTreeDepth = 100; // effectively no limit (Max length the tree can grow)
-    public double raveWeight = 0.7;
+    public double raveWeight = 0.7; // The weight of the RAVE value has on the combined evaluation value
     public double epsilon = 1e-6;
     public IStateHeuristic heuristic = AbstractGameState::getHeuristicScore;
 

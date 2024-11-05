@@ -2,13 +2,8 @@ package players.MCRave;
 
 import core.AbstractGameState;
 import core.actions.AbstractAction;
-import org.apache.spark.sql.execution.columnar.FLOAT;
-import players.MCRave.MCRaveParams;
-import players.MCRave.MCRavePlayer;
 import players.PlayerConstants;
 import players.simple.RandomPlayer;
-import scala.Console;
-import scala.collection.immutable.Stream;
 import utilities.ElapsedCpuTimer;
 
 import java.util.*;
@@ -17,13 +12,13 @@ import static java.util.stream.Collectors.toList;
 import static players.PlayerConstants.*;
 import static utilities.Utils.noise;
 
-class BasicTreeNode {
+class RAVETreeNode {
     // Root node of tree
-    BasicTreeNode root;
+    RAVETreeNode root;
     // Parent of this node
-    BasicTreeNode parent;
+    RAVETreeNode parent;
     // Children of this node
-    Map<AbstractAction, BasicTreeNode> children = new HashMap<>();
+    Map<AbstractAction, RAVETreeNode> children = new HashMap<>();
     // Depth of this node
     final int depth;
 
@@ -41,9 +36,10 @@ class BasicTreeNode {
     // State in this node (closed loop)
     private AbstractGameState state;
 
+    //delay threshold from switching from random rollout to biassed rollout
     private int delayThreshold = 200;
 
-    protected BasicTreeNode(MCRavePlayer player, BasicTreeNode parent, AbstractGameState state, Random rnd) {
+    protected RAVETreeNode(MCRavePlayer player, RAVETreeNode parent, AbstractGameState state, Random rnd) {
         this.player = player;
         this.fmCallsCount = 0;
         this.parent = parent;
@@ -86,7 +82,7 @@ class BasicTreeNode {
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
 
             // Selection + expansion: navigate tree until a node not fully expanded is found, add a new node to the tree
-            BasicTreeNode selected = treePolicy(); // performs selection (using UCBI) and expansion
+            RAVETreeNode selected = treePolicy(); // performs selection (using UCBI) and expansion
             // Monte carlo rollout: return value of MC rollout from the newly added node
             double delta = selected.rollOut(numIters); // performs the Monte Carlo simulation setup
             // Back up the value of the rollout through the tree
@@ -120,9 +116,9 @@ class BasicTreeNode {
      *
      * @return - new node added to the tree.
      */
-    private BasicTreeNode treePolicy() {
+    private RAVETreeNode treePolicy() {
 
-        BasicTreeNode cur = this;
+        RAVETreeNode cur = this;
 
         // Keep iterating while the state reached is not terminal and the depth of the tree is not exceeded
         while (cur.state.isNotTerminal() && cur.depth < player.getParameters().maxTreeDepth) {
@@ -161,7 +157,7 @@ class BasicTreeNode {
      *
      * @return - new child node.
      */
-    private BasicTreeNode expand() {
+    private RAVETreeNode expand() {
         // Find random child not already created
         Random r = new Random(player.getParameters().getRandomSeed());
         // pick a random unchosen action
@@ -174,7 +170,7 @@ class BasicTreeNode {
         advance(nextState, chosen.copy());
 
         // then instantiate a new node
-        BasicTreeNode tn = new BasicTreeNode(player, this, nextState, rnd);
+        RAVETreeNode tn = new RAVETreeNode(player, this, nextState, rnd);
         children.put(chosen, tn);
         return tn;
     }
@@ -198,7 +194,7 @@ class BasicTreeNode {
         double alpha = params.raveWeight;
 
         for (AbstractAction action : children.keySet()) {
-            BasicTreeNode child = children.get(action);
+            RAVETreeNode child = children.get(action);
             if (child == null)
                 throw new AssertionError("Should not be here");
             else if (bestAction == null)
@@ -210,7 +206,7 @@ class BasicTreeNode {
 
             //Get AMAF value and count
             double AMAFValue = player.AMAFValue.getOrDefault(action, 0.0);
-            double AMAFCount = player.preAMAFCount.getOrDefault(action, 0.0);
+            double AMAFCount = player.AMAFCount.getOrDefault(action, 0.0);
             //Combines both original value and AMAF value
             double combinedValue = (1 - alpha) * childValue + alpha * (AMAFValue / (AMAFCount + params.epsilon));
 
@@ -239,8 +235,8 @@ class BasicTreeNode {
             throw new AssertionError("We have a null value in UCT : shouldn't really happen!");
 
         root.fmCallsCount++;  // log one iteration complete
-        if(player.preAMAFCount.containsKey(bestAction)){
-            player.AMAFCount.put(bestAction,player.preAMAFCount.get(bestAction));
+        if(player.AMAFCount.containsKey(bestAction)){
+            player.RAVECount.put(bestAction,player.AMAFCount.get(bestAction));
         }
         return bestAction;
     }
@@ -286,6 +282,12 @@ class BasicTreeNode {
         return value;
     }
 
+    /**
+     * Creates a normalised probability across the available, the probabilities calculated via the AMAFValue
+     *
+     * @param rolloutState - list of currently available actions current gameState
+     * @return - a call to the weightedRandomSelect function, that returns the best action based on the probabilites.
+     */
     private AbstractAction biasedRollout(AbstractGameState rolloutState) {
         List<AbstractAction> availableActions = player.getForwardModel().computeAvailableActions(rolloutState, player.getParameters().actionSpace);
         Map<AbstractAction, Double> actionProbability = new HashMap<>();
@@ -294,7 +296,7 @@ class BasicTreeNode {
         // Calculate biases based on AMAF values
         for (AbstractAction action : availableActions) {
             double AMAFValue = player.AMAFValue.getOrDefault(action, 1.0);
-            double AMAFCount = player.preAMAFCount.getOrDefault(action, 1.0);
+            double AMAFCount = player.AMAFCount.getOrDefault(action, 1.0);
             double bias = AMAFValue / (AMAFCount + player.getParameters().epsilon);
             actionProbability.put(action, bias);
             totalBias += bias;
@@ -309,6 +311,14 @@ class BasicTreeNode {
         return weightedRandomSelect(availableActions, new ArrayList<>(actionProbability.values()));
     }
 
+    /**
+     * Applies a normalised probability across each of the available actions calculated by the BiasedRollout then generates
+     * a random number and an action is selected when the cumulativeProbability hits that value.
+     *
+     * @param actions - list of currently available actions
+     * @param probabilities - list of biases, generated from AMF Values
+     * @return - the action defined by the cumulative probability and random value
+     */
     private AbstractAction weightedRandomSelect(List<AbstractAction> actions, List<Double> probabilities) {
         double r = Math.random();
         double cumulativeProbability = 0.0;
@@ -344,11 +354,11 @@ class BasicTreeNode {
 
     /**
      * Back up the value of the child through all parents. Increase number of visits and total value.
-     *
+     * Also now incriments the AMAF Count for unused actions and calulcates the AMAFValue
      * @param result - value of rollout to backup
      */
     private void backUp(double result) {
-        BasicTreeNode n = this;
+        RAVETreeNode n = this;
         while (n != null) {
             n.nVisits++;
             n.totValue += result;
@@ -356,8 +366,9 @@ class BasicTreeNode {
             // Check if the currentROActions list is not empty before proceeding
             if (!player.currentROActions.isEmpty()) {
                 for (AbstractAction action : player.currentROActions) {
-                    if(!player.AMAFCount.containsKey(action)) {
-                        player.preAMAFCount.put(action, player.preAMAFCount.getOrDefault(action, 0.0) + 1);
+                    // Check to see if the AMAFValue has been selected as bestaction before
+                    if(!player.RAVECount.containsKey(action)) {
+                        player.AMAFCount.put(action, player.AMAFCount.getOrDefault(action, 0.0) + 1);
                         player.AMAFValue.put(action, calculateAMAFValue(action, result, n.nVisits));
                         //Console.print(player.AMAFCount);
                     }else{
@@ -385,7 +396,7 @@ class BasicTreeNode {
 
         for (AbstractAction action : children.keySet()) {
             if (children.get(action) != null) {
-                BasicTreeNode node = children.get(action);
+                RAVETreeNode node = children.get(action);
                 double childValue = node.nVisits;
 
                 // Apply small noise to break ties randomly
@@ -406,13 +417,21 @@ class BasicTreeNode {
         return bestAction;
     }
 
+    /**
+     * Calculates the AMAFValue for a specific action, it takes the result of the branch, the amount of visits that node has
+     * and the action as parameters, it will then check whether that AMAFValue is
+     * @param action - current action
+     * @param result       - current depth
+     * @param nVisits       - current depth
+     * @return - the best AbstractAction
+     */
     private double calculateAMAFValue(AbstractAction action, double result, double nVisits) {
         double currentAMAFValue = player.AMAFValue.getOrDefault(action, 1.0);
         double currentAMAFCount;
-        if(!player.AMAFCount.containsKey(action)) {
-             currentAMAFCount = player.preAMAFCount.getOrDefault(action, 1.0);
-        }else{
+        if(!player.RAVECount.containsKey(action)) {
              currentAMAFCount = player.AMAFCount.getOrDefault(action, 1.0);
+        }else{
+             currentAMAFCount = player.RAVECount.getOrDefault(action, 1.0);
         }
         double AMAFDecay =Math.max(0,(currentAMAFCount - nVisits) / (currentAMAFCount));
         double calculatedAMAFValue = currentAMAFValue + (result - currentAMAFValue) / currentAMAFCount;
