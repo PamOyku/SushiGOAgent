@@ -63,15 +63,33 @@ public class ScoreHeuristic implements IStateHeuristic {
         int chopsticksPoints = pointsPerCardType.getOrDefault(SGCard.SGCardType.Chopsticks, new Counter()).getValue();
         int puddingPoints = pointsPerCardType.getOrDefault(SGCard.SGCardType.Pudding, new Counter()).getValue();
 
-        if (makiPoints >= 5) bonus += 3;
-        if (tempuraPoints % 2 == 0 && tempuraPoints > 0) bonus += (tempuraPoints / 2) * 5; // Pair bonus for Tempura
-        if (sashimiPoints % 3 == 0 && sashimiPoints > 0) bonus += (sashimiPoints / 3) * 10; // Triplet bonus for Sashimi
-        if (salmonNigiriPoints > 0) bonus += salmonNigiriPoints * 2;
-        if (squidNigiriPoints > 0) bonus += squidNigiriPoints * 3;
-        if (eggNigiriPoints > 0) bonus += eggNigiriPoints;
-        if (wasabiPoints > 0) bonus += wasabiPoints * 2;
-        if (chopsticksPoints > 0) bonus += chopsticksPoints;
-        if (puddingPoints >= 5) bonus += 3;
+        if (makiPoints >= 5){
+            bonus += 3;
+        }
+        if (tempuraPoints % 2 == 0 && tempuraPoints > 0){
+            bonus += (tempuraPoints / 2) * 5; // Pair bonus for Tempura
+        }
+        if (sashimiPoints % 3 == 0 && sashimiPoints > 0){
+            bonus += (sashimiPoints / 3) * 10; // Triplet bonus for Sashimi
+        }
+        if (salmonNigiriPoints > 0){
+            bonus += salmonNigiriPoints * 2;
+        }
+        if (squidNigiriPoints > 0){
+            bonus += squidNigiriPoints * 3;
+        }
+        if (eggNigiriPoints > 0){
+            bonus += eggNigiriPoints;
+        }
+        if (wasabiPoints > 0) {
+            bonus += wasabiPoints * 2;
+        }
+        if (chopsticksPoints > 0){
+            bonus += chopsticksPoints;
+        }
+        if (puddingPoints >= 5){
+            bonus += 3;
+        }
 
         return bonus;
     }
@@ -121,12 +139,24 @@ public class ScoreHeuristic implements IStateHeuristic {
             }
         }
 
-        if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
-        if (tempuraCount == 1) handBonus += 3;
-        if (sashimiCount == 2) handBonus += 6;
-        if (squidNigiriCount >= 1) handBonus += squidNigiriCount * 3; //squid has higher value
-        if (wasabiCount >= 1) handBonus += wasabiCount * 2; // wasabi increases nigiri score
-        if (chopsticksCount >= 1) handBonus += chopsticksCount * 1; // chopsticks provide flexibility
+        if (makiCount >= 1) {
+            handBonus += makiCount * 2; //more maki increases the score
+        }
+        if (tempuraCount == 1) {
+            handBonus += 3;
+        }
+        if (sashimiCount == 2){
+            handBonus += 6;
+        }
+        if (squidNigiriCount >= 1){
+            handBonus += squidNigiriCount * 3; //squid has higher value
+        }
+        if (wasabiCount >= 1){
+            handBonus += wasabiCount * 2; // wasabi increases nigiri score
+        }
+        if (chopsticksCount >= 1){
+            handBonus += chopsticksCount * 1; // chopsticks provide flexibility
+        }
 
         return handBonus;
 
@@ -183,12 +213,24 @@ public class ScoreHeuristic implements IStateHeuristic {
                 }
             }
         }
-        if (makiCount >= 1) handBonus += makiCount * 2; //more maki increases the score
-        if (tempuraCount == 1) handBonus +=3;
-        if (sashimiCount == 2) handBonus +=6;
-        if (squidNigiriCount >= 1) handBonus += squidNigiriCount * 3; //squid has higher value
-        if (wasabiCount >= 1) handBonus += wasabiCount * 2; // wasabi increases nigiri score
-        if (chopsticksCount >= 1) handBonus += chopsticksCount * 1; // chopsticks provide flexibility
+        if (makiCount >= 1){
+            handBonus += makiCount * 2; //more maki increases the score
+        }
+        if (tempuraCount == 1){
+            handBonus +=3;
+        }
+        if (sashimiCount == 2){
+            handBonus +=6;
+        }
+        if (squidNigiriCount >= 1){
+            handBonus += squidNigiriCount * 3; //squid has higher value
+        }
+        if (wasabiCount >= 1){
+            handBonus += wasabiCount * 2; // wasabi increases nigiri score
+        }
+        if (chopsticksCount >= 1){
+            handBonus += chopsticksCount * 1; // chopsticks provide flexibility
+        }
 
 
         return handBonus;
@@ -239,11 +281,21 @@ public class ScoreHeuristic implements IStateHeuristic {
             }
         }
 
-        if (tempuraPlayed >= 2) playedCardsBonus += 5;
-        if (sashimiPlayed >= 3) playedCardsBonus += 10;
-        if (makiPlayed >= 3) playedCardsBonus += makiPlayed * 1.5;// for multiple
-        if (squidNigiriPlayed >= 1) playedCardsBonus += squidNigiriPlayed * 3;
-        if (salmonNigiriPlayed >= 1) playedCardsBonus += salmonNigiriPlayed * 2;
+        if (tempuraPlayed >= 2){
+            playedCardsBonus += 5;
+        }
+        if (sashimiPlayed >= 3){
+            playedCardsBonus += 10;
+        }
+        if (makiPlayed >= 3){
+            playedCardsBonus += makiPlayed * 1.5;// for multiple
+        }
+        if (squidNigiriPlayed >= 1){
+            playedCardsBonus += squidNigiriPlayed * 3;
+        }
+        if (salmonNigiriPlayed >= 1){
+            playedCardsBonus += salmonNigiriPlayed * 2;
+        }
 
         return playedCardsBonus;
     }
